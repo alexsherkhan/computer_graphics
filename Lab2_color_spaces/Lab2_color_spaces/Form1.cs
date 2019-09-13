@@ -32,7 +32,7 @@ namespace Lab2_color_spaces
                 try
                 {
                     // загружаем изображение
-                    pictureBox2.Image = new Bitmap(ofd.FileName);
+                    pictureBox1.Image = new Bitmap(ofd.FileName);
                 }
                 catch // в случае ошибки выводим MessageBox
                 {
