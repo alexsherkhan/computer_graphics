@@ -51,7 +51,7 @@ namespace Lab2_color_spaces
 
             }
         }
-               
+
         private void button1_Click(object sender, EventArgs e)
         {
             // диалог для выбора файла
@@ -64,13 +64,19 @@ namespace Lab2_color_spaces
                 try
                 {
                     // загружаем изображение
-                    pictureBox2.Image = new Bitmap(ofd.FileName);
+                    pictureBox1.Image = new Bitmap(ofd.FileName);
                 }
                 catch // в случае ошибки выводим MessageBox
                 {
                     MessageBox.Show("Невозможно открыть выбранный файл", "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+            }
+            gray(pictureBox1, pictureBox2);
+        }
+       
+
     }
 }
 
