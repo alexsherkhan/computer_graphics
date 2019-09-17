@@ -21,7 +21,7 @@ namespace Lab2_color_spaces
         }
 
         // Ч/Б
-        private void gray(PictureBox pictureBox1, PictureBox pictureBox2)
+        private void gray(PictureBox pictureBox1, PictureBox pictureBox2, bool average = true)
         {
             if (pictureBox1.Image != null) // если изображение в pictureBox1 имеется
             {
@@ -39,8 +39,13 @@ namespace Lab2_color_spaces
                         float R = (float)((pixel & 0x00FF0000) >> 16); // красный
                         float G = (float)((pixel & 0x0000FF00) >> 8); // зеленый
                         float B = (float)(pixel & 0x000000FF); // синий
-                                                               // делаем цвет черно-белым (оттенки серого) - находим среднее арифметическое
-                        R = G = B = (R + G + B) / 3.0f;
+                        
+                        // делаем цвет черно-белым (оттенки серого) - находим среднее арифметическое
+                        if (average)          //R = G = B = (R + G + B) / 3.0f;
+                            R = G = B = 0.299f * R + 0.587f * G + 0.114f * B;
+                        else 
+                            R = G = B = 0.2126f * R + 0.7152f * G + 0.0722f * B;
+
                         // собираем новый пиксель по частям (по каналам)
                         UInt32 newPixel = 0xFF000000 | ((UInt32)R << 16) | ((UInt32)G << 8) | ((UInt32)B);
                         // добавляем его в Bitmap нового изображения
@@ -51,6 +56,50 @@ namespace Lab2_color_spaces
 
             }
         }
+
+        private void difference_gray(PictureBox pictureBox1, PictureBox pictureBox2, PictureBox pictureBox3)
+        {
+            if (pictureBox1.Image != null && pictureBox2.Image != null) // если изображение в pictureBox1 имеется
+            {
+                // создаём Bitmap из изображения, находящегося в pictureBox1 и pictureBox1
+                Bitmap input1 = new Bitmap(pictureBox1.Image);
+                Bitmap input2 = new Bitmap(pictureBox2.Image);
+
+                // создаём Bitmap для черно-белого изображения
+                Bitmap output = new Bitmap(input1.Width, input1.Height);
+
+                // перебираем в циклах все пиксели исходного изображения
+                for (int j = 0; j < input1.Height; j++)
+                    for (int i = 0; i < input1.Width; i++)
+                    {
+                        // получаем (i, j) пиксель
+                        UInt32 pixel1 = (UInt32)(input1.GetPixel(i, j).ToArgb());
+                        UInt32 pixel2 = (UInt32)(input2.GetPixel(i, j).ToArgb());
+                        
+                        // получаем компоненты цветов пикселя
+                        float R1 = (float)((pixel1 & 0x00FF0000) >> 16); // красный
+                        float G1 = (float)((pixel1 & 0x0000FF00) >> 8); // зеленый
+                        float B1 = (float)(pixel1 & 0x000000FF); // синий
+
+                        float R2 = (float)((pixel2 & 0x00FF0000) >> 16); // красный
+                        float G2 = (float)((pixel2 & 0x0000FF00) >> 8); // зеленый
+                        float B2 = (float)(pixel2 & 0x000000FF); // синий
+
+                        R1 -= R2;
+                        G1 -= G2;
+                        B1 -= B2;
+
+                        // собираем новый пиксель по частям (по каналам)
+                        UInt32 newPixel = 0xFF000000 | ((UInt32)R1 << 16) | ((UInt32)G1 << 8) | ((UInt32)B1);
+                        // добавляем его в Bitmap нового изображения
+                        output.SetPixel(i, j, Color.FromArgb((int)newPixel));
+                    }
+                // выводим черно-белый Bitmap в pictureBox2
+                pictureBox3.Image = output;
+
+            }
+        }
+       
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -73,10 +122,15 @@ namespace Lab2_color_spaces
                 }
 
             }
-            gray(pictureBox1, pictureBox2);
+           
         }
-       
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            gray(pictureBox1, pictureBox5);
+            gray(pictureBox1, pictureBox6,false);
+            difference_gray(pictureBox5, pictureBox6, pictureBox7);
+        }
     }
 }
 
