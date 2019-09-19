@@ -21,7 +21,6 @@ namespace Lab2_color_spaces
         }
 
 
-
         private void button1_Click(object sender, EventArgs e)
         {
             // диалог для выбора файла
@@ -34,7 +33,7 @@ namespace Lab2_color_spaces
                 try
                 {
                     // загружаем изображение
-                    pictureBox1.Image = new Bitmap(ofd.FileName);
+                    pictureBox2.Image = new Bitmap(ofd.FileName);
                 }
                 catch // в случае ошибки выводим MessageBox
                 {
@@ -43,7 +42,6 @@ namespace Lab2_color_spaces
                 }
 
             }
-           
         }
 
         private void button2_Click(object sender, EventArgs e)
