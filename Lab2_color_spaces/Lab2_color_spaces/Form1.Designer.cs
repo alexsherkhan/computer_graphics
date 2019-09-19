@@ -295,4 +295,3 @@ namespace Lab2_color_spaces
         private System.Windows.Forms.Button button4;
     }
 }
-
