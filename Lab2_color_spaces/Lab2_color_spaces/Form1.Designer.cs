@@ -44,6 +44,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
@@ -91,10 +92,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(794, 494);
+            this.button1.Location = new System.Drawing.Point(21, 277);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(167, 30);
+            this.button1.Size = new System.Drawing.Size(240, 30);
             this.button1.TabIndex = 8;
             this.button1.Text = "Open";
             this.button1.UseVisualStyleBackColor = true;
@@ -103,7 +104,7 @@
             // pictureBox5
             // 
             this.pictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox5.Location = new System.Drawing.Point(156, 298);
+            this.pictureBox5.Location = new System.Drawing.Point(267, 277);
             this.pictureBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(240, 170);
@@ -114,7 +115,7 @@
             // pictureBox6
             // 
             this.pictureBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox6.Location = new System.Drawing.Point(401, 298);
+            this.pictureBox6.Location = new System.Drawing.Point(511, 277);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(240, 170);
@@ -125,7 +126,7 @@
             // pictureBox7
             // 
             this.pictureBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox7.Location = new System.Drawing.Point(645, 298);
+            this.pictureBox7.Location = new System.Drawing.Point(757, 277);
             this.pictureBox7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox7.Name = "pictureBox7";
             this.pictureBox7.Size = new System.Drawing.Size(240, 170);
@@ -180,45 +181,55 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(162, 475);
+            this.label5.Location = new System.Drawing.Point(328, 464);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(217, 17);
+            this.label5.Size = new System.Drawing.Size(102, 17);
             this.label5.TabIndex = 20;
-            this.label5.Text = "Y\'= 0.299*R + 0.587*G + 0.114*B";
+            this.label5.Text = "Histogram Red";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(398, 475);
+            this.label6.Location = new System.Drawing.Point(579, 464);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(245, 17);
+            this.label6.Size = new System.Drawing.Size(116, 17);
             this.label6.TabIndex = 21;
-            this.label6.Text = " Y\'= 0.2126*R + 0.7152*G + 0.0722*B";
+            this.label6.Text = "Histogram Green";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(735, 475);
+            this.label7.Location = new System.Drawing.Point(840, 464);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 17);
+            this.label7.Size = new System.Drawing.Size(104, 17);
             this.label7.TabIndex = 22;
-            this.label7.Text = "Difference";
+            this.label7.Text = "Histogram Blue";
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(21, 325);
+            this.button2.Location = new System.Drawing.Point(21, 312);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(106, 31);
+            this.button2.Size = new System.Drawing.Size(240, 31);
             this.button2.TabIndex = 23;
             this.button2.Text = "Gray";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(21, 349);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(240, 31);
+            this.button3.TabIndex = 24;
+            this.button3.Text = "Histogram RGB";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1007, 537);
+            this.ClientSize = new System.Drawing.Size(1007, 499);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -267,6 +278,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 
