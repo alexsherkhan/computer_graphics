@@ -75,7 +75,12 @@ namespace Lab2_color_spaces
 
             }
         }
-
+        Form2 f2 = new Form2();
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            f2.Show();
+            this.Hide();
+        }
     }
 }
 
