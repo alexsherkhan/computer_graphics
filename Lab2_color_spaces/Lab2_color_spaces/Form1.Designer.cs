@@ -1,4 +1,4 @@
-﻿namespace Lab2_color_spaces
+namespace Lab2_color_spaces
 {
     partial class Form1
     {
