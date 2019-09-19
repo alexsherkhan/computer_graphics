@@ -1,6 +1,5 @@
-﻿//2. Выделить из полноцветного изображения один 
-//из каналов R, G, B  и вывести результат. Построить гистограмму по цветам.
-using System;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,40 +17,11 @@ namespace Lab2_color_spaces
         public Form1()
         {
             InitializeComponent();
+            
+            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            pictureBox1.Image = new Bitmap(projectDirectory + "\\img\\fruits.jpg");
         }
 
-
-        // Ч/Б
-        private void gray(PictureBox pictureBox1, PictureBox pictureBox2)
-        {
-            if (pictureBox1.Image != null) // если изображение в pictureBox1 имеется
-            {
-                // создаём Bitmap из изображения, находящегося в pictureBox1
-                Bitmap input = new Bitmap(pictureBox1.Image);
-                // создаём Bitmap для черно-белого изображения
-                Bitmap output = new Bitmap(input.Width, input.Height);
-                // перебираем в циклах все пиксели исходного изображения
-                for (int j = 0; j < input.Height; j++)
-                    for (int i = 0; i < input.Width; i++)
-                    {
-                        // получаем (i, j) пиксель
-                        UInt32 pixel = (UInt32)(input.GetPixel(i, j).ToArgb());
-                        // получаем компоненты цветов пикселя
-                        float R = (float)((pixel & 0x00FF0000) >> 16); // красный
-                        float G = (float)((pixel & 0x0000FF00) >> 8); // зеленый
-                        float B = (float)(pixel & 0x000000FF); // синий
-                                                               // делаем цвет черно-белым (оттенки серого) - находим среднее арифметическое
-                        R = G = B = (R + G + B) / 3.0f;
-                        // собираем новый пиксель по частям (по каналам)
-                        UInt32 newPixel = 0xFF000000 | ((UInt32)R << 16) | ((UInt32)G << 8) | ((UInt32)B);
-                        // добавляем его в Bitmap нового изображения
-                        output.SetPixel(i, j, Color.FromArgb((int)newPixel));
-                    }
-                // выводим черно-белый Bitmap в pictureBox2
-                pictureBox2.Image = output;
-
-            }
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -65,7 +35,7 @@ namespace Lab2_color_spaces
                 try
                 {
                     // загружаем изображение
-                    pictureBox2.Image = new Bitmap(ofd.FileName);
+                    pictureBox1.Image = new Bitmap(ofd.FileName);
                 }
                 catch // в случае ошибки выводим MessageBox
                 {
@@ -75,11 +45,24 @@ namespace Lab2_color_spaces
 
             }
         }
-        Form2 f2 = new Form2();
-        private void Button2_Click(object sender, EventArgs e)
+        
+        private void button4_Click(object sender, EventArgs e)
         {
+            Form2 f2 = new Form2();
             f2.Show();
-            this.Hide();
+            //this.Hide();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null) 
+            {
+                GrayForm gf = new GrayForm();
+                gf.pic1 = this.pictureBox1;
+                gf.Show();
+            }
+            else MessageBox.Show("Не выбран файл", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
