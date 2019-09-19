@@ -1,6 +1,4 @@
-﻿//2. Выделить из полноцветного изображения один 
-//из каналов R, G, B  и вывести результат. Построить гистограмму по цветам.
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -53,7 +51,7 @@ namespace Lab2_color_spaces
             return color;
         }
 
-        private static Bitmap Histogram(Bitmap img)
+        private static Bitmap RedHistogram(Bitmap img)
         {
             var color = new int[256];
             var histogram = new Bitmap(256, 256);
@@ -69,7 +67,52 @@ namespace Lab2_color_spaces
                 }
             for(int i = 0; i < 255; ++i)
             { 
-                graph.DrawLine(Pens.Black, i, 255 - (int)(256 * color[i] / (double)max),
+                graph.DrawLine(Pens.Red, i, 255 - (int)(256 * color[i] / (double)max),
+                    i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
+            }
+            graph.Dispose();
+            return histogram;
+        }
+
+        private static Bitmap BlueHistogram(Bitmap img)
+        {
+            var color = new int[256];
+            var histogram = new Bitmap(256, 256);
+            var graph = Graphics.FromImage(histogram);
+            int max = int.MinValue;
+            for (int row = 0; row < img.Height; ++row)
+                for (int col = 0; col < img.Width; ++col)
+                {
+                    var x = img.GetPixel(col, row);
+                    ++color[x.B];
+                    if (color[x.B] > max)
+                        max = color[x.B];
+                }
+            for (int i = 0; i < 255; ++i)
+            {
+                graph.DrawLine(Pens.Blue, i, 255 - (int)(256 * color[i] / (double)max),
+                    i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
+            }
+            graph.Dispose();
+            return histogram;
+        }
+        private static Bitmap GreenHistogram(Bitmap img)
+        {
+            var color = new int[256];
+            var histogram = new Bitmap(256, 256);
+            var graph = Graphics.FromImage(histogram);
+            int max = int.MinValue;
+            for (int row = 0; row < img.Height; ++row)
+                for (int col = 0; col < img.Width; ++col)
+                {
+                    var x = img.GetPixel(col, row);
+                    ++color[x.G];
+                    if (color[x.G] > max)
+                        max = color[x.G];
+                }
+            for (int i = 0; i < 255; ++i)
+            {
+                graph.DrawLine(Pens.Green, i, 255 - (int)(256 * color[i] / (double)max),
                     i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
             }
             graph.Dispose();
@@ -81,7 +124,7 @@ namespace Lab2_color_spaces
             // диалог для выбора файла
             var dialog = new OpenFileDialog();
             // фильтр форматов файлов
-           // dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
+            dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
             // если в диалоге была нажата кнопка ОК
             if (DialogResult.OK != dialog.ShowDialog()) return;
             Bitmap bitmap;
@@ -105,9 +148,9 @@ namespace Lab2_color_spaces
             pictureBox2.Image = R;
             pictureBox3.Image = G;
             pictureBox4.Image = B;
-            pictureBox5.Image = Histogram(R);
-            pictureBox6.Image = Histogram(G);
-            pictureBox7.Image = Histogram(B);
+            pictureBox6.Image = RedHistogram(R);
+            pictureBox5.Image = GreenHistogram(G);
+            pictureBox7.Image = BlueHistogram(B);
         }
     }
 }
