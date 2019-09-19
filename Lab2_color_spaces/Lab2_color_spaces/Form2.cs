@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,7 @@ namespace Lab2_color_spaces
 {
     public partial class Form2 : Form
     {
+        public PictureBox pic_1;
         public Form2()
         {
             InitializeComponent();
@@ -148,31 +150,29 @@ namespace Lab2_color_spaces
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
-            // диалог для выбора файла
-            OpenFileDialog ofd = new OpenFileDialog();
-            // фильтр форматов файлов
-            ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
-            // если в диалоге была нажата кнопка ОК
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    // загружаем изображение
-                    Image newImage = Image.FromFile(ofd.FileName);
-                    pictureBox1.Image = new Bitmap(newImage, pictureBox1.Size);
-                }
-                catch // в случае ошибки выводим MessageBox
-                {
-                    MessageBox.Show("Невозможно открыть выбранный файл", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-            }
+            hsv(pictureBox1, pictureBox3);
+            (pictureBox3.Image as Bitmap).Save(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName+"\\img\\1.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            pictureBox1.Image = pic_1.Image;
+            hsv(pictureBox1, pictureBox3);
+        }
+
+        private void trackBar2_MouseUp(object sender, MouseEventArgs e)
+        {
+            hsv(pictureBox1, pictureBox3);
+        }
+
+        private void trackBar3_MouseUp(object sender, MouseEventArgs e)
+        {
+            hsv(pictureBox1, pictureBox3);
+        }
+
+        private void trackBar4_MouseUp(object sender, MouseEventArgs e)
         {
             hsv(pictureBox1, pictureBox3);
         }

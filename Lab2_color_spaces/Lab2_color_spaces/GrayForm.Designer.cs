@@ -185,6 +185,8 @@
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
             this.Name = "GrayForm";
             this.Text = "Oттенки серого";
             this.Load += new System.EventHandler(this.GrayForm_Load);

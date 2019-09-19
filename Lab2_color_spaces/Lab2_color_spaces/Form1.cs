@@ -124,9 +124,9 @@ namespace Lab2_color_spaces
         
         private void button3_Click(object sender, EventArgs e)
         {
-            var R = ConvertColor(bitmap, redColor);
-            var G = ConvertColor(bitmap, greenColor);
-            var B = ConvertColor(bitmap, blueColor);
+            var R = ConvertColor(new Bitmap(pictureBox1.Image), redColor);
+            var G = ConvertColor(new Bitmap(pictureBox1.Image), greenColor);
+            var B = ConvertColor(new Bitmap(pictureBox1.Image), blueColor);
             pictureBox2.Image = R;
             pictureBox3.Image = G;
             pictureBox4.Image = B;
@@ -137,8 +137,12 @@ namespace Lab2_color_spaces
   
         private void button4_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2();
-            f2.Show();
+            if (pictureBox1.Image != null)
+            {
+                Form2 f2 = new Form2();
+                f2.pic_1 = this.pictureBox1;
+                f2.Show();
+            }
             //this.Hide();
         }
 

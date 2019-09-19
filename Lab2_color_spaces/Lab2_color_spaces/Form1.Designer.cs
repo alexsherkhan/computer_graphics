@@ -222,8 +222,9 @@ namespace Lab2_color_spaces
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(240, 31);
             this.button3.TabIndex = 24;
-            this.button3.Text = "Histogram RGB";
+            this.button3.Text = "RGB and Histogram";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -259,7 +260,9 @@ namespace Lab2_color_spaces
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Цветовые пространства. Преобразование цветовых пространств.";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
