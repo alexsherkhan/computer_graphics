@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,9 @@ namespace Lab2_color_spaces
         public Form1()
         {
             InitializeComponent();
+            
+            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            pictureBox1.Image = new Bitmap(projectDirectory + "\\img\\fruits.jpg");
         }
 
         private static ColorMatrix redColor = new ColorMatrix(new float[][] {
@@ -95,30 +99,31 @@ namespace Lab2_color_spaces
             return histogram;
         }
 
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
+       private void button1_Click(object sender, EventArgs e)
+       {
             // диалог для выбора файла
-            var dialog = new OpenFileDialog();
+            OpenFileDialog ofd = new OpenFileDialog();
             // фильтр форматов файлов
-            dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
+            ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
             // если в диалоге была нажата кнопка ОК
-            if (DialogResult.OK != dialog.ShowDialog()) return;
-            Bitmap bitmap;
-            try
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
-                // загружаем изображение
-                bitmap = new Bitmap(dialog.FileName);
-            }
-            catch // в случае ошибки выводим MessageBox
-            {
-                MessageBox.Show("Невозможно открыть выбранный файл", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                try
+                {
+                    // загружаем изображение
+                    pictureBox1.Image = new Bitmap(ofd.FileName);
+                }
+                catch // в случае ошибки выводим MessageBox
+                {
+                    MessageBox.Show("Невозможно открыть выбранный файл", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
-
-            pictureBox1.Image = bitmap;
+            }
+        }
+        
+        private void button3_Click(object sender, EventArgs e)
+        {
             var R = ConvertColor(bitmap, redColor);
             var G = ConvertColor(bitmap, greenColor);
             var B = ConvertColor(bitmap, blueColor);
@@ -128,6 +133,25 @@ namespace Lab2_color_spaces
             pictureBox6.Image = Histogram(R, 'R');
             pictureBox5.Image = Histogram(G, 'G');
             pictureBox7.Image = Histogram(B, 'B');
+        }
+  
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form2 f2 = new Form2();
+            f2.Show();
+            //this.Hide();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null) 
+            {
+                GrayForm gf = new GrayForm();
+                gf.pic1 = this.pictureBox1;
+                gf.Show();
+            }
+            else MessageBox.Show("Не выбран файл", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
