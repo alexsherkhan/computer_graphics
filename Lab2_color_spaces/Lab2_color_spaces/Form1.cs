@@ -1,6 +1,5 @@
-﻿//2. Выделить из полноцветного изображения один 
-//из каналов R, G, B  и вывести результат. Построить гистограмму по цветам.
-using System;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,6 +17,9 @@ namespace Lab2_color_spaces
         public Form1()
         {
             InitializeComponent();
+            
+            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            pictureBox1.Image = new Bitmap(projectDirectory + "\\img\\fruits.jpg");
         }
 
 
