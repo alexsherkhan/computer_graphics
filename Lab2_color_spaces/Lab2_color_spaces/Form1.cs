@@ -40,7 +40,7 @@ namespace Lab2_color_spaces
             new float [] {0, 0, 0, 1, 0 },
             new float [] {0, 0, 0, 0, 1 }
         });
-       
+
         private static Bitmap ConvertColor(Bitmap pic, ColorMatrix transform) {
             var color = new Bitmap(pic.Width, pic.Height);
             var attr = new ImageAttributes();
@@ -51,73 +51,50 @@ namespace Lab2_color_spaces
             return color;
         }
 
-        private static Bitmap RedHistogram(Bitmap img)
+        private static Bitmap Histogram(Bitmap img, char cl)
         {
             var color = new int[256];
             var histogram = new Bitmap(256, 256);
             var graph = Graphics.FromImage(histogram);
             int max = int.MinValue;
-            for(int row = 0; row < img.Height; ++row)
-                for(int col = 0; col < img.Width; ++col)
+            for (int row = 0; row < img.Height; ++row)
+                for (int col = 0; col < img.Width; ++col)
                 {
                     var x = img.GetPixel(col, row);
-                    ++color[x.R];
-                    if (color[x.R] > max)
-                        max = color[x.R];
+                    if (cl == 'R')
+                    {
+                        ++color[x.R];
+                        if (color[x.R] > max)
+                            max = color[x.R];
+                    }
+                    if (cl == 'G')
+                    {
+                        ++color[x.G];
+                        if (color[x.G] > max)
+                            max = color[x.G];
+                    }
+                    if (cl == 'B')
+                    {
+                        ++color[x.B];
+                        if (color[x.B] > max)
+                            max = color[x.B];
+                    }
                 }
-            for(int i = 0; i < 255; ++i)
-            { 
-                graph.DrawLine(Pens.Red, i, 255 - (int)(256 * color[i] / (double)max),
-                    i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
+            Pen pen = new Pen(Color.Black);
+
+            if (cl == 'R') pen.Color = Color.Red;
+            if (cl == 'G') pen.Color = Color.Green;
+            if (cl == 'B') pen.Color = Color.Blue;
+
+            for (int i = 0; i < 255; ++i)
+            {
+                graph.DrawLine(pen, i, 255 - (int)(256 * color[i] / (double)max),
+                i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
             }
             graph.Dispose();
             return histogram;
         }
 
-        private static Bitmap BlueHistogram(Bitmap img)
-        {
-            var color = new int[256];
-            var histogram = new Bitmap(256, 256);
-            var graph = Graphics.FromImage(histogram);
-            int max = int.MinValue;
-            for (int row = 0; row < img.Height; ++row)
-                for (int col = 0; col < img.Width; ++col)
-                {
-                    var x = img.GetPixel(col, row);
-                    ++color[x.B];
-                    if (color[x.B] > max)
-                        max = color[x.B];
-                }
-            for (int i = 0; i < 255; ++i)
-            {
-                graph.DrawLine(Pens.Blue, i, 255 - (int)(256 * color[i] / (double)max),
-                    i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
-            }
-            graph.Dispose();
-            return histogram;
-        }
-        private static Bitmap GreenHistogram(Bitmap img)
-        {
-            var color = new int[256];
-            var histogram = new Bitmap(256, 256);
-            var graph = Graphics.FromImage(histogram);
-            int max = int.MinValue;
-            for (int row = 0; row < img.Height; ++row)
-                for (int col = 0; col < img.Width; ++col)
-                {
-                    var x = img.GetPixel(col, row);
-                    ++color[x.G];
-                    if (color[x.G] > max)
-                        max = color[x.G];
-                }
-            for (int i = 0; i < 255; ++i)
-            {
-                graph.DrawLine(Pens.Green, i, 255 - (int)(256 * color[i] / (double)max),
-                    i + 1, 255 - (int)(256 * color[i + 1] / (double)max));
-            }
-            graph.Dispose();
-            return histogram;
-        }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -148,9 +125,9 @@ namespace Lab2_color_spaces
             pictureBox2.Image = R;
             pictureBox3.Image = G;
             pictureBox4.Image = B;
-            pictureBox6.Image = RedHistogram(R);
-            pictureBox5.Image = GreenHistogram(G);
-            pictureBox7.Image = BlueHistogram(B);
+            pictureBox6.Image = Histogram(R, 'R');
+            pictureBox5.Image = Histogram(G, 'G');
+            pictureBox7.Image = Histogram(B, 'B');
         }
     }
 }
