@@ -119,14 +119,6 @@ namespace Lab3_raster_algorithms
             }
         }
 
-        private void button1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (pictureBox1.Image != null)
-            {
-                paint(xG, yG, curPixel, paletteColor);
-                pictureBox1.Refresh();
-            }
-        }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -143,7 +135,22 @@ namespace Lab3_raster_algorithms
 
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            g = Graphics.FromImage(image);
+            g.FillRectangle(Brushes.White, 0, 0, pictureBox1.Width, pictureBox1.Height);   
+            pictureBox1.Image = image;
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null)
+            {
+                paint(xG, yG, curPixel, paletteColor);
+                pictureBox1.Refresh();
+            }
+        }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
