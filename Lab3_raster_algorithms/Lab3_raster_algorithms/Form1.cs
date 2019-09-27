@@ -14,16 +14,21 @@ namespace Lab3_raster_algorithms
     public partial class Form1 : Form
     {
         private Bitmap image;
+        private Bitmap image2;
         private Graphics g;
         private Color paletteColor;
         private Color curPixel;
         private int xG, yG;
         private List<Point> bordersList = new List<Point>();
         private bool[,] used;
+        private bool flag;
+
         public Form1()
         {
             InitializeComponent();
             paletteColor = Color.Black;
+            pictureBox2.BackColor = paletteColor;
+            flag = true;
         }
 
         private void borderAllocation()
@@ -212,12 +217,9 @@ namespace Lab3_raster_algorithms
             {
                 try
                 {
-                    image = new Bitmap(openDialog.FileName);
-                    pictureBox1.Image = image;
-                    g = Graphics.FromImage(pictureBox1.Image);
-                    pictureBox1.Invalidate();
-                    Form1.ActiveForm.Width = image.Width + 70;
-                    Form1.ActiveForm.Height = image.Height + menuStrip1.Height + panel1.Height;
+                  image2 = new Bitmap(openDialog.FileName);
+                    pictureBox2.Image = image2;
+                    flag = false;
                 }
                 catch
                 {
@@ -232,6 +234,10 @@ namespace Lab3_raster_algorithms
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 paletteColor = colorDialog1.Color;
+                flag = true;
+                pictureBox2.Image = new Bitmap(pictureBox2.Width, pictureBox2.Height);
+                pictureBox2.BackColor = paletteColor;
+                pictureBox2.Refresh();
             }
         }
 
@@ -287,6 +293,62 @@ namespace Lab3_raster_algorithms
             }
         }
 
+        private void FloodFill(Bitmap bmp, Point pt, Color targetColor, Bitmap img)
+        {
+            Color replacementColor = img.GetPixel(0, 0);
+
+            Stack<Point> pixels = new Stack<Point>();
+            targetColor = bmp.GetPixel(pt.X, pt.Y);
+            pixels.Push(pt);
+
+            while (pixels.Count > 0)
+            {
+                Point a = pixels.Pop();
+                if (a.X < bmp.Width && a.X > 0 &&
+                        a.Y < bmp.Height && a.Y > 0)
+                {
+                    //bmp.Width
+                    if (bmp.GetPixel(a.X, a.Y) == targetColor)
+                    {
+
+                            var x =  a.X - pt.X;
+                            var y = a.Y - pt.Y;
+
+                        if (x < 0 && y < 0)  { x = img.Width  + x; y = img.Height  + y; }
+                        if (x < 0 && y == 0) { x = img.Width  + x; y = y; }
+                        if (x < 0 && y > 0)  { x = img.Width  + x; y = y; }
+
+                        if (x == 0 && y < 0) { x = x; y = img.Height + y; }
+                        if (x == 0 && y == 0){ x = x; y = y; }
+                        if (x == 0 && y > 0) { x = x; y = y; }
+
+                        if (x > 0 && y < 0) { x = x; y = img.Height + y; }
+                        if (x > 0 && y == 0) { x = x; y = y; }
+                        if (x > 0 && y > 0) { x = x; y = y; }
+
+                        while (x >= img.Width)
+                        {
+                            x = x - img.Width+1;
+                        }
+                        while (y >= img.Height)
+                        {
+                            y = y - img.Height+1;
+                        }
+                        
+                        replacementColor = img.GetPixel(x,y );
+                            bmp.SetPixel(a.X, a.Y, replacementColor);
+                            pixels.Push(new Point(a.X - 1, a.Y));
+                            pixels.Push(new Point(a.X + 1, a.Y));
+                            pixels.Push(new Point(a.X, a.Y - 1));
+                            pixels.Push(new Point(a.X, a.Y + 1));
+                    }
+                }
+            }
+            pictureBox1.Refresh();
+            return;
+        }
+
+       
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (pictureBox1.Image != null)
@@ -326,14 +388,38 @@ namespace Lab3_raster_algorithms
         {
             if (pictureBox1.Image != null)
             {
-                paint(xG, yG, curPixel, paletteColor);
-                pictureBox1.Refresh();
+                if (flag)
+                {
+                    paint(xG, yG, curPixel, paletteColor);
+                    pictureBox1.Refresh();
+                }
+                else
+                    FloodFill(image, new Point(xG, yG), paletteColor, image2);
+                
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+
+        private void button2_Click(object sender, EventArgs e)
         {
-            borderAllocation();
+            if (g != null) g.Clear(Color.White);
+            pictureBox1.Refresh();
+        }
+
+        private static Bitmap ResizeImage(int newSize, Bitmap bitmap)
+        {
+           
+                Size size = new Size( newSize, newSize);
+                Bitmap newBitmap = new Bitmap(bitmap, size);
+         
+
+            return newBitmap;
+        }
+
+        private void trackBar2_MouseUp(object sender, MouseEventArgs e)
+        {
+            image2 = ResizeImage(trackBar2.Value, image2);
+            pictureBox2.Refresh();
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
