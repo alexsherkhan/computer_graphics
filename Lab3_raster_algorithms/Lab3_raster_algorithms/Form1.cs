@@ -19,6 +19,8 @@ namespace Lab3_raster_algorithms
         private Color paletteColor;
         private Color curPixel;
         private int xG, yG;
+        private List<Point> bordersList = new List<Point>();
+        private bool[,] used;
         private bool flag;
 
         public Form1()
@@ -29,6 +31,184 @@ namespace Lab3_raster_algorithms
             flag = true;
         }
 
+        private void borderAllocation()
+        {
+            //Image image = pictureBox1.Image;
+            Color color = colorDialog1.Color;
+            used = new bool[image.Width, image.Height];
+            bool flag = false;
+            for (int x = 0; x < image.Width; ++x)
+            {
+                for (int y = 0; y < image.Height; ++y)
+                {
+                    Color currentPixel = image.GetPixel(x, y);
+                    if (checkPixel(image.GetPixel(x, y), color) && !checkPixel(image.GetPixel(x, y + 1), color))
+                    {
+                        if (!used[x, y])
+                        {
+                            findBorder(x, y, color);
+                            drawBorder();
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+                if (flag){
+                  break;
+}
+            }
+            
+        }
+
+
+        private bool checkPixel(Color pixelColor, Color standardColor)
+        {
+            return Math.Abs(pixelColor.R - standardColor.R) < 20 && Math.Abs(pixelColor.A - standardColor.A) < 20 && Math.Abs(pixelColor.B - standardColor.B) < 20 && Math.Abs(pixelColor.G - standardColor.G) < 20;
+        }
+
+
+        private void findBorder(int x, int y, Color color)
+        {
+            Stack<Point> queue = new Stack<Point>();
+            List<Point> tmp = new List<Point>();
+            tmp.Add(new Point(x, y));
+            queue.Push(new Point(x, y));
+            while (queue.Count > 0)
+            {
+                Point currentPoint = queue.Pop();
+                /*if (tmp.First().Equals(currentPoint)){
+                    break;
+                }*/
+                if (used[currentPoint.X, currentPoint.Y])
+                {
+                    continue;
+                }
+                used[currentPoint.X, currentPoint.Y] = true;
+                Point prevPoint = tmp.ElementAt(tmp.Count - 1);
+                if (currentPoint.X < image.Width - 1)
+                {
+                    Point nextPoint = new Point(currentPoint.X + 1, currentPoint.Y);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X + 1, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X + 1, nextPoint.Y));
+                        continue;
+                    }
+                }
+                if (currentPoint.Y > 0 && currentPoint.X < image.Width - 1)
+                {
+                    Point nextPoint = new Point(currentPoint.X + 1, currentPoint.Y - 1);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+                if (currentPoint.Y > 0 )
+                {
+                    Point nextPoint = new Point(currentPoint.X, currentPoint.Y - 1);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+                if (currentPoint.Y > 0 && currentPoint.X > 0)
+                {
+                    Point nextPoint = new Point(currentPoint.X - 1, currentPoint.Y - 1);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+                if (currentPoint.X > 0)
+                {
+                    Point nextPoint = new Point(currentPoint.X - 1, currentPoint.Y);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+                if (currentPoint.Y < image.Height - 1 && currentPoint.X > 0)
+                {
+                    Point nextPoint = new Point(currentPoint.X + 1, currentPoint.Y - 1);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+                if (currentPoint.Y < image.Height - 1)
+                {
+                    Point nextPoint = new Point(currentPoint.X, currentPoint.Y + 1);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+                if (currentPoint.Y < image.Height - 1 && currentPoint.X < image.Width - 1)
+                {
+                    Point nextPoint = new Point(currentPoint.X + 1, currentPoint.Y + 1);
+                    int Xdiff = currentPoint.X - nextPoint.X;
+                    int Ydiff = currentPoint.Y - nextPoint.Y;
+                    Point inPoint = new Point(nextPoint.X - Ydiff, nextPoint.Y - Xdiff);
+                    if (checkPixel(image.GetPixel(nextPoint.X, nextPoint.Y), color) && !checkPixel(image.GetPixel(inPoint.X, inPoint.Y), color))
+                    {
+                        queue.Push(new Point(nextPoint.X, nextPoint.Y));
+                        tmp.Add(new Point(nextPoint.X, nextPoint.Y));
+                        continue;
+
+                    }
+                }
+
+            }
+            bordersList.InsertRange(bordersList.Count, tmp);
+        }
+
+        private void drawBorder()
+        {
+            foreach (Point i in bordersList)
+            {
+                image.SetPixel(i.X, i.Y, Color.Red);
+            }
+            pictureBox1.Image = image;
+        }
         private void loadImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
@@ -200,7 +380,7 @@ namespace Lab3_raster_algorithms
         {
             image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(image);
-            g.FillRectangle(Brushes.White, 0, 0, pictureBox1.Width, pictureBox1.Height);   
+            g.FillRectangle(Brushes.White, 0, 0, pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = image;
         }
 
@@ -218,6 +398,7 @@ namespace Lab3_raster_algorithms
                 
             }
         }
+
 
         private void button2_Click(object sender, EventArgs e)
         {
