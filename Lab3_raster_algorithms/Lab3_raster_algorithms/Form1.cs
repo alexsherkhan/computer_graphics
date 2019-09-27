@@ -138,7 +138,7 @@ namespace Lab3_raster_algorithms
                         if (x < 0 && y == 0) { x = img.Width  + x; y = y; }
                         if (x < 0 && y > 0)  { x = img.Width  + x; y = y; }
 
-                        if (x == 0 && y < 0) { x = x; y = img.Height + 1 + y; }
+                        if (x == 0 && y < 0) { x = x; y = img.Height + y; }
                         if (x == 0 && y == 0){ x = x; y = y; }
                         if (x == 0 && y > 0) { x = x; y = y; }
 
@@ -146,17 +146,15 @@ namespace Lab3_raster_algorithms
                         if (x > 0 && y == 0) { x = x; y = y; }
                         if (x > 0 && y > 0) { x = x; y = y; }
 
-                        //if (x >= img.Width ) { x = x - img.Width; }
                         while (x >= img.Width)
                         {
-                            x = x - img.Width;
+                            x = x - img.Width+1;
                         }
-                        //if (y >= img.Height) { y = y - img.Height; }
                         while (y >= img.Height)
                         {
-                            y = y - img.Height;
+                            y = y - img.Height+1;
                         }
-
+                        
                         replacementColor = img.GetPixel(x,y );
                             bmp.SetPixel(a.X, a.Y, replacementColor);
                             pixels.Push(new Point(a.X - 1, a.Y));
