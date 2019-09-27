@@ -42,6 +42,8 @@ namespace Lab3_raster_algorithms
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -88,7 +90,7 @@ namespace Lab3_raster_algorithms
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(309, 56);
+            this.trackBar1.Location = new System.Drawing.Point(358, 56);
             this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(135, 56);
@@ -98,7 +100,7 @@ namespace Lab3_raster_algorithms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(328, 33);
+            this.label1.Location = new System.Drawing.Point(373, 35);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(102, 17);
             this.label1.TabIndex = 5;
@@ -107,7 +109,7 @@ namespace Lab3_raster_algorithms
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(355, 13);
+            this.label2.Location = new System.Drawing.Point(397, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(48, 17);
             this.label2.TabIndex = 6;
@@ -115,6 +117,8 @@ namespace Lab3_raster_algorithms
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBox1);
+            this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.trackBar2);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.label3);
@@ -131,11 +135,11 @@ namespace Lab3_raster_algorithms
             // 
             // trackBar2
             // 
-            this.trackBar2.Location = new System.Drawing.Point(120, 35);
+            this.trackBar2.Location = new System.Drawing.Point(120, 56);
             this.trackBar2.Maximum = 2000;
             this.trackBar2.Minimum = 250;
             this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(85, 56);
+            this.trackBar2.Size = new System.Drawing.Size(102, 56);
             this.trackBar2.TabIndex = 10;
             this.trackBar2.Value = 250;
             this.trackBar2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar2_MouseUp);
@@ -153,7 +157,7 @@ namespace Lab3_raster_algorithms
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(219, 6);
+            this.label3.Location = new System.Drawing.Point(269, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 17);
             this.label3.TabIndex = 8;
@@ -161,9 +165,9 @@ namespace Lab3_raster_algorithms
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(211, 25);
+            this.pictureBox2.Location = new System.Drawing.Point(253, 26);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(100, 66);
+            this.pictureBox2.Size = new System.Drawing.Size(89, 58);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 7;
             this.pictureBox2.TabStop = false;
@@ -180,6 +184,26 @@ namespace Lab3_raster_algorithms
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(120, 5);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(102, 45);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "Выделить";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(253, 90);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(105, 21);
+            this.checkBox1.TabIndex = 12;
+            this.checkBox1.Text = "Выделение";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -222,6 +246,8 @@ namespace Lab3_raster_algorithms
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

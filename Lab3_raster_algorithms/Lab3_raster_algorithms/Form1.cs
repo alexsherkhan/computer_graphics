@@ -217,9 +217,18 @@ namespace Lab3_raster_algorithms
             {
                 try
                 {
-                  image2 = new Bitmap(openDialog.FileName);
-                    pictureBox2.Image = image2;
-                    flag = false;
+                    if (checkBox1.Checked)
+                    {
+                        image = new Bitmap(openDialog.FileName);
+                        pictureBox1.Image = image;
+                        flag = false;
+                    }
+                    else
+                    {
+                        image2 = new Bitmap(openDialog.FileName);
+                        pictureBox2.Image = image2;
+                        flag = false;
+                    }
                 }
                 catch
                 {
@@ -420,6 +429,11 @@ namespace Lab3_raster_algorithms
         {
             image2 = ResizeImage(trackBar2.Value, image2);
             pictureBox2.Refresh();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            borderAllocation();
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
