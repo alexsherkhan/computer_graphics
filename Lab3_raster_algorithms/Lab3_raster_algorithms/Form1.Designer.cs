@@ -250,4 +250,3 @@ namespace Lab3_raster_algorithms
         private System.Windows.Forms.CheckBox checkBox1;
     }
 }
-
