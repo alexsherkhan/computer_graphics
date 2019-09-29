@@ -1,4 +1,4 @@
-﻿namespace Lab3_raster_algorithms
+namespace Lab3_raster_algorithms
 {
     partial class Form1
     {

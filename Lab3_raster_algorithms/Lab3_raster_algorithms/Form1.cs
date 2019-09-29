@@ -235,15 +235,17 @@ namespace Lab3_raster_algorithms
                     if (bmp.GetPixel(a.X, a.Y) == targetColor)
                     {
 
-                        var x = a.X - pt.X;
-                        var y = a.Y - pt.Y;
 
-                        if (x < 0 && y < 0) { x = img.Width + x; y = img.Height + y; }
-                        if (x < 0 && y == 0) { x = img.Width + x; y = y; }
-                        if (x < 0 && y > 0) { x = img.Width + x; y = y; }
+                            var x =  a.X - pt.X;
+                            var y = a.Y - pt.Y;
+
+                        if (x < 0 && y < 0)  { x = img.Width  + x; y = img.Height  + y; }
+                        if (x < 0 && y == 0) { x = img.Width  + x; y = y; }
+                        if (x < 0 && y > 0)  { x = img.Width  + x; y = y; }
 
                         if (x == 0 && y < 0) { x = x; y = img.Height + y; }
-                        if (x == 0 && y == 0) { x = x; y = y; }
+                        if (x == 0 && y == 0){ x = x; y = y; }
+
                         if (x == 0 && y > 0) { x = x; y = y; }
 
                         if (x > 0 && y < 0) { x = x; y = img.Height + y; }
@@ -252,19 +254,19 @@ namespace Lab3_raster_algorithms
 
                         while (x >= img.Width)
                         {
-                            x = x - img.Width + 1;
+                            x = x - img.Width+1;
                         }
                         while (y >= img.Height)
                         {
-                            y = y - img.Height + 1;
+                            y = y - img.Height+1;
                         }
-
-                        replacementColor = img.GetPixel(x, y);
-                        bmp.SetPixel(a.X, a.Y, replacementColor);
-                        pixels.Push(new Point(a.X - 1, a.Y));
-                        pixels.Push(new Point(a.X + 1, a.Y));
-                        pixels.Push(new Point(a.X, a.Y - 1));
-                        pixels.Push(new Point(a.X, a.Y + 1));
+                        
+                        replacementColor = img.GetPixel(x,y );
+                            bmp.SetPixel(a.X, a.Y, replacementColor);
+                            pixels.Push(new Point(a.X - 1, a.Y));
+                            pixels.Push(new Point(a.X + 1, a.Y));
+                            pixels.Push(new Point(a.X, a.Y - 1));
+                            pixels.Push(new Point(a.X, a.Y + 1));
                     }
                 }
             }
@@ -345,6 +347,29 @@ namespace Lab3_raster_algorithms
             image2 = ResizeImage(trackBar2.Value, image2);
             pictureBox2.Refresh();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (g != null) g.Clear(Color.White);
+            pictureBox1.Refresh();
+        }
+
+        private static Bitmap ResizeImage(int newSize, Bitmap bitmap)
+        {
+           
+                Size size = new Size( newSize, newSize);
+                Bitmap newBitmap = new Bitmap(bitmap, size);
+         
+
+            return newBitmap;
+        }
+
+        private void trackBar2_MouseUp(object sender, MouseEventArgs e)
+        {
+            image2 = ResizeImage(trackBar2.Value, image2);
+            pictureBox2.Refresh();
+        }
+
 
         private void button3_Click(object sender, EventArgs e)
         {
