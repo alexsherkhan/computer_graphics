@@ -348,28 +348,7 @@ namespace Lab3_raster_algorithms
             pictureBox2.Refresh();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (g != null) g.Clear(Color.White);
-            pictureBox1.Refresh();
-        }
-
-        private static Bitmap ResizeImage(int newSize, Bitmap bitmap)
-        {
-           
-                Size size = new Size( newSize, newSize);
-                Bitmap newBitmap = new Bitmap(bitmap, size);
-         
-
-            return newBitmap;
-        }
-
-        private void trackBar2_MouseUp(object sender, MouseEventArgs e)
-        {
-            image2 = ResizeImage(trackBar2.Value, image2);
-            pictureBox2.Refresh();
-        }
-
+        
 
         private void button3_Click(object sender, EventArgs e)
         {
