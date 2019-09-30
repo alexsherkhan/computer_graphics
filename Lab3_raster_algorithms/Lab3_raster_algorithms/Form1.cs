@@ -219,11 +219,11 @@ namespace Lab3_raster_algorithms
 
         private void FloodFill(Bitmap bmp, Point pt, Color targetColor, Bitmap img)
         {
-            Color replacementColor = img.GetPixel(0, 0);
-
+            Color replacementColor = img.GetPixel(0, 0);         
             Stack<Point> pixels = new Stack<Point>();
             targetColor = bmp.GetPixel(pt.X, pt.Y);
             pixels.Push(pt);
+           
 
             while (pixels.Count > 0)
             {
@@ -231,11 +231,8 @@ namespace Lab3_raster_algorithms
                 if (a.X < bmp.Width && a.X > 0 &&
                         a.Y < bmp.Height && a.Y > 0)
                 {
-                    //bmp.Width
-                    if (bmp.GetPixel(a.X, a.Y) == targetColor)
+                    if (bmp.GetPixel(a.X, a.Y) == targetColor )
                     {
-
-
                             var x =  a.X - pt.X;
                             var y = a.Y - pt.Y;
 
@@ -260,13 +257,25 @@ namespace Lab3_raster_algorithms
                         {
                             y = y - img.Height+1;
                         }
+
+                        while (x < 0)
+                        {
+                            x = x + img.Width - 1;
+                        }
+                        while (y < 0)
+                        {
+                            y = y + img.Height - 1;
+                        }
+
+                        replacementColor = img.GetPixel(x,y);
+                        bmp.SetPixel(a.X, a.Y, replacementColor);
                         
-                        replacementColor = img.GetPixel(x,y );
-                            bmp.SetPixel(a.X, a.Y, replacementColor);
                             pixels.Push(new Point(a.X - 1, a.Y));
                             pixels.Push(new Point(a.X + 1, a.Y));
                             pixels.Push(new Point(a.X, a.Y - 1));
                             pixels.Push(new Point(a.X, a.Y + 1));
+                            
+                        
                     }
                 }
             }

@@ -37,13 +37,13 @@ namespace Lab3_raster_algorithms
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.button2 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -133,6 +133,26 @@ namespace Lab3_raster_algorithms
             this.panel1.Size = new System.Drawing.Size(511, 112);
             this.panel1.TabIndex = 3;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(253, 90);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(105, 21);
+            this.checkBox1.TabIndex = 12;
+            this.checkBox1.Text = "Выделение";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(120, 5);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(102, 45);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "Выделить";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // trackBar2
             // 
             this.trackBar2.Location = new System.Drawing.Point(120, 56);
@@ -184,26 +204,6 @@ namespace Lab3_raster_algorithms
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(120, 5);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(102, 45);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "Выделить";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(253, 90);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(105, 21);
-            this.checkBox1.TabIndex = 12;
-            this.checkBox1.Text = "Выделение";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
