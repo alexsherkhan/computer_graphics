@@ -8,7 +8,7 @@ using System.Drawing;
 namespace Lab4_affine_transformations.Primitives
 {
     // Класс прямой 
-    class Edge
+    class Edge : Primitive
     {
         private Point2D a;
         private Point2D b;

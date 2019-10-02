@@ -31,6 +31,7 @@ namespace Lab4_affine_transformations
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.selectedPr = new System.Windows.Forms.RadioButton();
             this.rbPolygon = new System.Windows.Forms.RadioButton();
             this.rbEdge = new System.Windows.Forms.RadioButton();
             this.rbPoint = new System.Windows.Forms.RadioButton();
@@ -46,6 +47,8 @@ namespace Lab4_affine_transformations
             this.button9 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -56,8 +59,7 @@ namespace Lab4_affine_transformations
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.newPolygon = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -69,6 +71,7 @@ namespace Lab4_affine_transformations
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.selectedPr);
             this.groupBox1.Controls.Add(this.rbPolygon);
             this.groupBox1.Controls.Add(this.rbEdge);
             this.groupBox1.Controls.Add(this.rbPoint);
@@ -81,10 +84,21 @@ namespace Lab4_affine_transformations
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Выберите примитив";
             // 
+            // selectedPr
+            // 
+            this.selectedPr.AutoSize = true;
+            this.selectedPr.Location = new System.Drawing.Point(8, 91);
+            this.selectedPr.Margin = new System.Windows.Forms.Padding(4);
+            this.selectedPr.Name = "selectedPr";
+            this.selectedPr.Size = new System.Drawing.Size(161, 21);
+            this.selectedPr.TabIndex = 17;
+            this.selectedPr.Text = "Выделить приметив";
+            this.selectedPr.UseVisualStyleBackColor = true;
+            // 
             // rbPolygon
             // 
             this.rbPolygon.AutoSize = true;
-            this.rbPolygon.Location = new System.Drawing.Point(8, 82);
+            this.rbPolygon.Location = new System.Drawing.Point(8, 62);
             this.rbPolygon.Margin = new System.Windows.Forms.Padding(4);
             this.rbPolygon.Name = "rbPolygon";
             this.rbPolygon.Size = new System.Drawing.Size(127, 21);
@@ -95,7 +109,7 @@ namespace Lab4_affine_transformations
             // rbEdge
             // 
             this.rbEdge.AutoSize = true;
-            this.rbEdge.Location = new System.Drawing.Point(8, 53);
+            this.rbEdge.Location = new System.Drawing.Point(8, 43);
             this.rbEdge.Margin = new System.Windows.Forms.Padding(4);
             this.rbEdge.Name = "rbEdge";
             this.rbEdge.Size = new System.Drawing.Size(85, 21);
@@ -192,9 +206,10 @@ namespace Lab4_affine_transformations
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(851, 750);
+            this.pictureBox1.Size = new System.Drawing.Size(849, 750);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // splitContainer1
             // 
@@ -211,6 +226,7 @@ namespace Lab4_affine_transformations
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.newPolygon);
             this.splitContainer1.Panel2.Controls.Add(this.button9);
             this.splitContainer1.Panel2.Controls.Add(this.label5);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
@@ -224,7 +240,7 @@ namespace Lab4_affine_transformations
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(1057, 750);
-            this.splitContainer1.SplitterDistance = 851;
+            this.splitContainer1.SplitterDistance = 849;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -262,120 +278,14 @@ namespace Lab4_affine_transformations
             this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.button8);
             this.groupBox2.Controls.Add(this.button7);
-            this.groupBox2.Location = new System.Drawing.Point(14, 182);
+            this.groupBox2.Location = new System.Drawing.Point(14, 203);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(220, 293);
+            this.groupBox2.Size = new System.Drawing.Size(220, 275);
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Аффинные преобразования";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "относительно произвольной точки",
-            "относительно своего центра"});
-            this.comboBox2.Location = new System.Drawing.Point(10, 217);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(201, 24);
-            this.comboBox2.TabIndex = 11;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(8, 182);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(184, 28);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Масштабирование";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(114, 78);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(59, 22);
-            this.textBox3.TabIndex = 9;
-            this.textBox3.Text = "10";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(25, 78);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(59, 22);
-            this.textBox2.TabIndex = 8;
-            this.textBox2.Text = "10";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(90, 81);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(15, 17);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "y";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 81);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(14, 17);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "x";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "вокруг произвольной точки",
-            "вокруг своего центра"});
-            this.comboBox1.Location = new System.Drawing.Point(10, 151);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(201, 24);
-            this.comboBox1.TabIndex = 5;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(9, 116);
-            this.button8.Margin = new System.Windows.Forms.Padding(4);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(184, 28);
-            this.button8.TabIndex = 4;
-            this.button8.Text = "Поворот ";
-            this.button8.UseVisualStyleBackColor = true;
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(8, 43);
-            this.button7.Margin = new System.Windows.Forms.Padding(4);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(184, 28);
-            this.button7.TabIndex = 3;
-            this.button7.Text = "Сместить на ";
-            this.button7.UseVisualStyleBackColor = true;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(18, 146);
-            this.button6.Margin = new System.Windows.Forms.Padding(4);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(184, 28);
-            this.button6.TabIndex = 13;
-            this.button6.Text = "Очистить сцену";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 244);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(68, 17);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Масштаб";
             // 
             // comboBox3
             // 
@@ -391,10 +301,127 @@ namespace Lab4_affine_transformations
             "80",
             "90",
             "100"});
-            this.comboBox3.Location = new System.Drawing.Point(9, 264);
+            this.comboBox3.Location = new System.Drawing.Point(9, 244);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(121, 24);
             this.comboBox3.TabIndex = 13;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(16, 224);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(68, 17);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Масштаб";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "относительно произвольной точки",
+            "относительно своего центра"});
+            this.comboBox2.Location = new System.Drawing.Point(10, 197);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(201, 24);
+            this.comboBox2.TabIndex = 11;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(8, 162);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(184, 28);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Масштабирование";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(114, 58);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(59, 22);
+            this.textBox3.TabIndex = 9;
+            this.textBox3.Text = "10";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(25, 58);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(59, 22);
+            this.textBox2.TabIndex = 8;
+            this.textBox2.Text = "10";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(90, 61);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(15, 17);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "y";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(14, 17);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "x";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "вокруг произвольной точки",
+            "вокруг своего центра"});
+            this.comboBox1.Location = new System.Drawing.Point(10, 131);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(201, 24);
+            this.comboBox1.TabIndex = 5;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(9, 96);
+            this.button8.Margin = new System.Windows.Forms.Padding(4);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(184, 28);
+            this.button8.TabIndex = 4;
+            this.button8.Text = "Поворот ";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(8, 23);
+            this.button7.Margin = new System.Windows.Forms.Padding(4);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(184, 28);
+            this.button7.TabIndex = 3;
+            this.button7.Text = "Сместить на ";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(15, 172);
+            this.button6.Margin = new System.Windows.Forms.Padding(4);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(184, 28);
+            this.button6.TabIndex = 13;
+            this.button6.Text = "Очистить сцену";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // newPolygon
+            // 
+            this.newPolygon.Location = new System.Drawing.Point(15, 141);
+            this.newPolygon.Margin = new System.Windows.Forms.Padding(4);
+            this.newPolygon.Name = "newPolygon";
+            this.newPolygon.Size = new System.Drawing.Size(184, 28);
+            this.newPolygon.TabIndex = 17;
+            this.newPolygon.Text = "Новый многоугольник";
+            this.newPolygon.UseVisualStyleBackColor = true;
+            this.newPolygon.Click += new System.EventHandler(this.newPolygon_Click);
             // 
             // Form1
             // 
@@ -449,6 +476,8 @@ namespace Lab4_affine_transformations
         private Label label5;
         private ComboBox comboBox3;
         private Label label6;
+        private RadioButton selectedPr;
+        private Button newPolygon;
     }
 }
 

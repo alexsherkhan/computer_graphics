@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Lab4_affine_transformations.Primitives
 {
-    class Polygon
+    class Polygon : Primitive
     {
         private List<Point2D> points = new List<Point2D>();
 
