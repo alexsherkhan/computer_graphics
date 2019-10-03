@@ -20,6 +20,23 @@ namespace Lab4_affine_transformations.Primitives
             this.points = points;
         }
 
+        public PointF Center()
+        {
+            float cx = 0;
+            float cy = 0;
+            float a = 0;
+            int count = points.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                float tmp = (points[i].X * points[(i + 1) % count].Y - points[i].Y * points[(i + 1) % count].X);
+                a += tmp;
+                cx += (points[i].X + points[(i + 1)%count].X)*tmp;
+                cy += (points[i].Y + points[(i + 1) % count].Y)*tmp;
+            }
+            PointF result = new PointF(cx / (3 * a), cy / (3 * a));
+            return result;
+        }
+
         public void Draw(Graphics g, bool selected)
         {
             if (1 == Points.Count)

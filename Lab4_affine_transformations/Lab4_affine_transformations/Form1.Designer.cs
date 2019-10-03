@@ -44,6 +44,7 @@ namespace Lab4_affine_transformations
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.newPolygon = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -59,7 +60,7 @@ namespace Lab4_affine_transformations
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.newPolygon = new System.Windows.Forms.Button();
+            this.setPoint = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -71,6 +72,7 @@ namespace Lab4_affine_transformations
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.setPoint);
             this.groupBox1.Controls.Add(this.selectedPr);
             this.groupBox1.Controls.Add(this.rbPolygon);
             this.groupBox1.Controls.Add(this.rbEdge);
@@ -87,7 +89,7 @@ namespace Lab4_affine_transformations
             // selectedPr
             // 
             this.selectedPr.AutoSize = true;
-            this.selectedPr.Location = new System.Drawing.Point(8, 91);
+            this.selectedPr.Location = new System.Drawing.Point(8, 81);
             this.selectedPr.Margin = new System.Windows.Forms.Padding(4);
             this.selectedPr.Name = "selectedPr";
             this.selectedPr.Size = new System.Drawing.Size(161, 21);
@@ -206,7 +208,7 @@ namespace Lab4_affine_transformations
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(849, 750);
+            this.pictureBox1.Size = new System.Drawing.Size(846, 750);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -240,9 +242,20 @@ namespace Lab4_affine_transformations
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(1057, 750);
-            this.splitContainer1.SplitterDistance = 849;
+            this.splitContainer1.SplitterDistance = 846;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // newPolygon
+            // 
+            this.newPolygon.Location = new System.Drawing.Point(15, 141);
+            this.newPolygon.Margin = new System.Windows.Forms.Padding(4);
+            this.newPolygon.Name = "newPolygon";
+            this.newPolygon.Size = new System.Drawing.Size(184, 28);
+            this.newPolygon.TabIndex = 17;
+            this.newPolygon.Text = "Новый многоугольник";
+            this.newPolygon.UseVisualStyleBackColor = true;
+            this.newPolygon.Click += new System.EventHandler(this.newPolygon_Click);
             // 
             // button9
             // 
@@ -335,6 +348,7 @@ namespace Lab4_affine_transformations
             this.button1.TabIndex = 10;
             this.button1.Text = "Масштабирование";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // textBox3
             // 
@@ -390,6 +404,7 @@ namespace Lab4_affine_transformations
             this.button8.TabIndex = 4;
             this.button8.Text = "Поворот ";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.Button8_Click);
             // 
             // button7
             // 
@@ -400,6 +415,7 @@ namespace Lab4_affine_transformations
             this.button7.TabIndex = 3;
             this.button7.Text = "Сместить на ";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // button6
             // 
@@ -412,16 +428,16 @@ namespace Lab4_affine_transformations
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // newPolygon
+            // setPoint
             // 
-            this.newPolygon.Location = new System.Drawing.Point(15, 141);
-            this.newPolygon.Margin = new System.Windows.Forms.Padding(4);
-            this.newPolygon.Name = "newPolygon";
-            this.newPolygon.Size = new System.Drawing.Size(184, 28);
-            this.newPolygon.TabIndex = 17;
-            this.newPolygon.Text = "Новый многоугольник";
-            this.newPolygon.UseVisualStyleBackColor = true;
-            this.newPolygon.Click += new System.EventHandler(this.newPolygon_Click);
+            this.setPoint.AutoSize = true;
+            this.setPoint.Location = new System.Drawing.Point(8, 102);
+            this.setPoint.Margin = new System.Windows.Forms.Padding(4);
+            this.setPoint.Name = "setPoint";
+            this.setPoint.Size = new System.Drawing.Size(117, 21);
+            this.setPoint.TabIndex = 18;
+            this.setPoint.Text = "Задать точку";
+            this.setPoint.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -478,6 +494,7 @@ namespace Lab4_affine_transformations
         private Label label6;
         private RadioButton selectedPr;
         private Button newPolygon;
+        private RadioButton setPoint;
     }
 }
 
