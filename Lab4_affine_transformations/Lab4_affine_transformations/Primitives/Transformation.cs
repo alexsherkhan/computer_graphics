@@ -35,6 +35,35 @@ namespace Lab4_affine_transformations.Primitives
             matrix[row * 3 + col] = value;
         }
 
+        public static Transformation Scale(float fx, float fy)
+        {
+            return new Transformation(
+                fx, 0, 0,
+                 0, fy, 0,
+                 0, 0, 1
+            );
+        }
+
+        public static Transformation Rotate(float angle)
+        {
+            var sin = (float)Math.Sin(angle);
+            var cos = (float)Math.Cos(angle);
+            return new Transformation(
+                 cos, sin, 0,
+                -sin, cos, 0,
+                    0, 0, 1
+            );
+        }
+
+        public static Transformation Translate(float dx, float dy)
+        {
+            return new Transformation(
+                 1, 0, 0,
+                 0, 1, 0,
+                dx, dy, 1
+            );
+        }
+
         public static Transformation operator *(Transformation t1, Transformation t2)
         {
             Transformation result = new Transformation();

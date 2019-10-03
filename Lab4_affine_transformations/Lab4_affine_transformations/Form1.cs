@@ -27,6 +27,7 @@ namespace Lab4_affine_transformations
 
         private MouseEventArgs args;
         private Primitive SelectedPrim;
+        private Point2D SelectedPoint;
 
         private Primitive SelectedPrimitive
         {
@@ -125,6 +126,9 @@ namespace Lab4_affine_transformations
                     shouldStartNewPolygon = false;
                 }
                 polygons[polygons.Count - 1].Points.Add(p);
+            }else if (setPoint.Checked)
+            {
+                SelectedPoint = p;
             }
             Redraw();
         }
@@ -142,6 +146,52 @@ namespace Lab4_affine_transformations
         private void newPolygon_Click(object sender, EventArgs e)
         {
             shouldStartNewPolygon = true;
+        }
+
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            int x = int.Parse(textBox2.Text);
+            int y = int.Parse(textBox3.Text);
+            Transformation shift = Transformation.Translate(x, y);
+            SelectedPrimitive.Apply(shift);
+            Redraw();
+        }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            PointF center;
+            if (comboBox1.SelectedIndex == 0)
+            {
+                center = new PointF(SelectedPoint.X, SelectedPoint.Y);
+            }
+            else
+            {
+                center = ((Polygon)SelectedPrimitive).Center();
+            }
+            var moveToCenter = Transformation.Translate(-center.X, -center.Y);
+            Transformation rotate = Transformation.Rotate((float)(Math.PI / 180 * int.Parse(textBox1.Text)));
+            var moveBack = Transformation.Translate(center.X, center.Y);
+            SelectedPrimitive.Apply(moveToCenter * rotate * moveBack);
+            Redraw();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            PointF center;
+            if (comboBox1.SelectedIndex == 0)
+            {
+                center = new PointF(SelectedPoint.X, SelectedPoint.Y);
+            }
+            else
+            {
+                center = ((Polygon)SelectedPrimitive).Center();
+            }
+            float scale = float.Parse(comboBox3.Text)/ 100;
+            var moveToCenter = Transformation.Translate(-center.X, -center.Y);
+            Transformation rotate = Transformation.Scale(scale,scale);
+            var moveBack = Transformation.Translate(center.X, center.Y);
+            SelectedPrimitive.Apply(moveToCenter * rotate * moveBack);
+            Redraw();
         }
     }
 
