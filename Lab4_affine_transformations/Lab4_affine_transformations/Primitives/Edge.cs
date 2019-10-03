@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Drawing;
 
 namespace Lab4_affine_transformations.Primitives
 {
+    // Класс прямой 
     class Edge : Primitive
     {
         private Point2D a;

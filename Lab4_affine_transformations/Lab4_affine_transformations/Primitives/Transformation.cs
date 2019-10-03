@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Lab4_affine_transformations.Primitives
 {
@@ -61,7 +64,7 @@ namespace Lab4_affine_transformations.Primitives
             );
         }
 
-        public static Transformation operator*(Transformation t1, Transformation t2)
+        public static Transformation operator* (Transformation t1, Transformation t2)
         {
             Transformation result = new Transformation();
             for (int i = 0; i < 3; ++i)
@@ -74,5 +77,6 @@ namespace Lab4_affine_transformations.Primitives
                 }
             return result;
         }
+
     }
 }

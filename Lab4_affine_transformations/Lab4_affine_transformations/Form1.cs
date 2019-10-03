@@ -18,10 +18,46 @@ namespace Lab4_affine_transformations
         private List<Edge> edges = new List<Edge>();
         private List<Polygon> polygons = new List<Polygon>();
 
+
         private Edge lastEdge;
         private Edge previousEdge;
         private Polygon lastPolygon;
         private Point2D lastPoint;
+
+        private bool shouldStartNewPolygon = true;
+        private bool shouldStartNewEdge = true;
+        private Point2D edgeFirstPoint;
+
+        private bool shouldShowDistance = false;
+        private Edge previouslySelectedEdge;
+
+        private MouseEventArgs args;
+        private Primitive SelectedPrim;
+        private Point2D SelectedPoint;
+
+        private Primitive SelectedPrimitive
+        {
+            get
+            {
+                if (null == SelectedPrim) return null;
+                var p = SelectedPrim;
+
+                if (p is Edge) previouslySelectedEdge = (Edge)p;
+                if (p is Point2D && shouldShowDistance)
+                {
+                    MessageBox.Show("Расстояние от отрезка до точки: " +
+                        previouslySelectedEdge.Distance((Point2D)p));
+                }
+                if (!(p is Edge)) shouldShowDistance = false;
+                return p;
+              
+                
+            }
+            set
+            {
+                Redraw();
+            }
+        }
 
         public Form1()
         {
@@ -34,6 +70,134 @@ namespace Lab4_affine_transformations
         private void button6_Click(object sender, EventArgs e)
         {
             graphics.Clear(Color.White);
+            pictureBox1.Invalidate();
+            points.Clear();
+            edges.Clear();
+            polygons.Clear();
+            shouldStartNewPolygon = true;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            args = (MouseEventArgs)e;
+            Point2D p = Point2D.FromPoint(args.Location);
+            if (selectedPr.Checked)
+            {
+
+                foreach (var item in points)
+                {
+                    if(item.X - p.X > -5 && item.X - p.X < 5) SelectedPrim = (Primitive)item;
+                }
+                foreach (var item in edges)
+                {
+                    if (item.Distance(p) >-5 && item.Distance(p) < 5) SelectedPrim = (Primitive)item;
+                }
+                foreach (var item in polygons)
+                {
+
+                   // if (item.Points.Contains(p) || item.Points.Contains(new Point2D (p.X+1,p.Y+1)) 
+                      //  || item.Points.Contains(new Point2D(p.X - 1, p.Y - 1)))
+                     //   SelectedPrim = (Primitive)item;
+                }
+            }
+                
+
+            if (rbPoint.Checked)
+            {
+                SelectedPrim = (Primitive)p;
+                points.Add(p);
+            }
+            else if (rbEdge.Checked)
+            {
+                if (shouldStartNewEdge)
+                {
+                    edgeFirstPoint = p;
+                    shouldStartNewEdge = false;
+                }
+                else
+                {
+                    Edge edge = new Edge(edgeFirstPoint, p);
+                    SelectedPrim = (Primitive)edge;
+                    edges.Add(edge);
+                    shouldStartNewEdge = true;
+                }
+            }
+            else if (rbPolygon.Checked)
+            {
+                if (shouldStartNewPolygon)
+                {
+                    Polygon polygon = new Polygon();
+                    SelectedPrim = (Primitive)polygon;
+                    polygons.Add(polygon);
+                    shouldStartNewPolygon = false;
+                }
+                polygons[polygons.Count - 1].Points.Add(p);
+            }else if (setPoint.Checked)
+            {
+                SelectedPoint = p;
+            }
+            Redraw();
+        }
+
+        private void Redraw()
+        {
+            graphics.Clear(Color.White);
+            if (!shouldStartNewEdge) edgeFirstPoint.Draw(graphics, false);
+            points.ForEach((p) => p.Draw(graphics, p == SelectedPrimitive));
+            edges.ForEach((e) => e.Draw(graphics, e == SelectedPrimitive));
+            polygons.ForEach((p) => p.Draw(graphics, p == SelectedPrimitive));
+            pictureBox1.Invalidate();
+        }
+
+        private void newPolygon_Click(object sender, EventArgs e)
+        {
+            shouldStartNewPolygon = true;
+        }
+
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            int x = int.Parse(textBox2.Text);
+            int y = int.Parse(textBox3.Text);
+            Transformation shift = Transformation.Translate(x, y);
+            SelectedPrimitive.Apply(shift);
+            Redraw();
+        }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            PointF center;
+            if (comboBox1.SelectedIndex == 0)
+            {
+                center = new PointF(SelectedPoint.X, SelectedPoint.Y);
+            }
+            else
+            {
+                center = ((Polygon)SelectedPrimitive).Center();
+            }
+            var moveToCenter = Transformation.Translate(-center.X, -center.Y);
+            Transformation rotate = Transformation.Rotate((float)(Math.PI / 180 * int.Parse(textBox1.Text)));
+            var moveBack = Transformation.Translate(center.X, center.Y);
+            SelectedPrimitive.Apply(moveToCenter * rotate * moveBack);
+            Redraw();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            PointF center;
+            if (comboBox1.SelectedIndex == 0)
+            {
+                center = new PointF(SelectedPoint.X, SelectedPoint.Y);
+            }
+            else
+            {
+                center = ((Polygon)SelectedPrimitive).Center();
+            }
+            float scale = float.Parse(comboBox3.Text)/ 100;
+            var moveToCenter = Transformation.Translate(-center.X, -center.Y);
+            Transformation rotate = Transformation.Scale(scale,scale);
+            var moveBack = Transformation.Translate(center.X, center.Y);
+            SelectedPrimitive.Apply(moveToCenter * rotate * moveBack);
+            Redraw();
         }
 
         // Уравнение прямой, проходящей через две заданные точки (x1,y1) и (x2,y2):
@@ -149,4 +313,5 @@ namespace Lab4_affine_transformations
             }
         }
     }
+
 }

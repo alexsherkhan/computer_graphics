@@ -1,12 +1,19 @@
-﻿using System.Drawing;
+
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Lab4_affine_transformations.Primitives
 {
+    // Класс точки
     class Point2D : Primitive
     {
         private static float POINT_SIZE = 6;
 
-        private float[] coords = new float[]{ 0, 0, 1 };
+        private float[] coords = new float[] { 0, 0, 1 };
 
         public float X { get { return coords[0]; } set { coords[0] = value; } }
         public float Y { get { return coords[1]; } set { coords[1] = value; } }
@@ -41,5 +48,17 @@ namespace Lab4_affine_transformations.Primitives
             }
             coords = newCoords;
         }
+
+        public static bool operator !=(Point2D p1, Point2D p2)
+        {
+            if (p1.X == p2.X && p1.Y == p2.Y) return false;
+            else return true;
+        }
+        public static bool operator ==(Point2D p1, Point2D p2)
+        {
+            if (p1.X == p2.X && p1.Y == p2.Y) return true;
+            else return false;
+        }
+
     }
 }
