@@ -284,6 +284,69 @@ namespace Lab3_raster_algorithms
         }
 
 
+        private void paintTemplate(int xImg, int yImg, int yTemplate, Color oldColor)
+        { 
+            int xLeft = xImg - 1, xRight = xImg + 1;
+
+            if (image.GetPixel(xImg, yImg).ToArgb() != oldColor.ToArgb())
+                return;
+
+            Color pix;
+
+            // Цвет левого пикселя
+            if (xLeft != -1)
+            {
+                pix = image.GetPixel(xLeft, yImg);
+
+                while (xLeft >= 0 && pix == oldColor)
+                {
+                    xLeft--;
+                    if (xLeft >= 0)
+                        pix = image.GetPixel(xLeft, yImg);
+                }
+            }
+
+            pix = image.GetPixel(xRight, yImg);
+
+            // Цвет правого пикселя
+            if (xRight != image.Width)
+            {
+                pix = image.GetPixel(xRight, yImg);
+
+                while (xRight < image.Width && pix == oldColor)
+                {
+                    xRight++;
+                    if (xRight < image.Width)
+                        pix = image.GetPixel(xRight, yImg);
+                }
+            }
+
+
+            // --- рисуем линию из пикселей шаблона ---
+            int newX;
+            newX = image2.Width - (xG - xLeft) % image2.Width;
+
+            if (yTemplate == -1)
+                yTemplate = image2.Height - 1;
+            ++xLeft;
+            --xRight;
+
+            for (int i = xLeft; i < xRight; ++i)
+            {
+                image.SetPixel(i, yImg, image2.GetPixel((image2.Width / 2 + newX++) % image2.Width, yTemplate % image2.Height));
+            }
+
+
+            for (int i = xLeft; i < xRight; ++i)
+            {
+                if (yImg < pictureBox1.Image.Height - 1)
+                    paintTemplate(i, yImg + 1, yTemplate + 1, oldColor);
+                if (yImg > 0)
+                    paintTemplate(i, yImg - 1, yTemplate - 1, oldColor);
+            }
+
+        }
+
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (pictureBox1.Image != null)
@@ -324,13 +387,26 @@ namespace Lab3_raster_algorithms
             if (pictureBox1.Image != null)
             {
                 if (flag)
-            {
-                paint(xG, yG, curPixel, paletteColor);
-                pictureBox1.Refresh();
-            }
-            else
-                FloodFill(image, new Point(xG, yG), paletteColor, image2);
-
+                {
+                    paint(xG, yG, curPixel, paletteColor);
+                    pictureBox1.Refresh();
+                }
+                else
+                    
+                try
+                {
+                    //FloodFill(image, new Point(xG, yG), paletteColor, image2);
+                    paintTemplate(xG, yG, 0, curPixel);
+                }
+                catch (StackOverflowException ex)
+                {
+                    MessageBox.Show("Нельзя заливать белым изображением");
+                }
+                finally
+                {
+                    pictureBox1.Refresh();
+                }
+                
             }
         }
 
@@ -346,8 +422,6 @@ namespace Lab3_raster_algorithms
 
             Size size = new Size(newSize, newSize);
             Bitmap newBitmap = new Bitmap(bitmap, size);
-
-
             return newBitmap;
         }
 
