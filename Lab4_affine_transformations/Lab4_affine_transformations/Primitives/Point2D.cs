@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,7 @@ namespace Lab4_affine_transformations.Primitives
             }
             coords = newCoords;
         }
+
         public static bool operator !=(Point2D p1, Point2D p2)
         {
             if (p1.X == p2.X && p1.Y == p2.Y) return false;
@@ -57,5 +59,6 @@ namespace Lab4_affine_transformations.Primitives
             if (p1.X == p2.X && p1.Y == p2.Y) return true;
             else return false;
         }
+
     }
 }

@@ -64,7 +64,7 @@ namespace Lab4_affine_transformations.Primitives
             );
         }
 
-        public static Transformation operator *(Transformation t1, Transformation t2)
+        public static Transformation operator* (Transformation t1, Transformation t2)
         {
             Transformation result = new Transformation();
             for (int i = 0; i < 3; ++i)
