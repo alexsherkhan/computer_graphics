@@ -222,7 +222,7 @@ namespace Lab4_affine_transformations
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(845, 750);
+            this.pictureBox1.Size = new System.Drawing.Size(844, 750);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -256,7 +256,7 @@ namespace Lab4_affine_transformations
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(1057, 750);
-            this.splitContainer1.SplitterDistance = 845;
+            this.splitContainer1.SplitterDistance = 844;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -280,6 +280,7 @@ namespace Lab4_affine_transformations
             this.button9.TabIndex = 16;
             this.button9.Text = "Классифицировать";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // label5
             // 

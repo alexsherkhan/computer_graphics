@@ -386,6 +386,19 @@ namespace Lab4_affine_transformations
                     MessageBox.Show("Точка НЕ принадлежит многоугольнику");
             }
         }
+
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+            if (lastEdge == null || lastPoint == null)
+                MessageBox.Show("Не выбраны точка и отрезок");
+            else
+            {
+                if (lastEdge.Distance(lastPoint) < 0) MessageBox.Show("Точка слева от отрезка");
+                else MessageBox.Show("Точка справа от отрезка"); ;
+            }
+        }
     }
 
 }
