@@ -94,10 +94,23 @@ namespace Lab4_affine_transformations
                 }
                 foreach (var item in polygons)
                 {
+                    for (int i = 0; i <= item.Points.Count-1; i++)
+                    {
+                        Edge line;
+                        if (i == item.Points.Count - 1) line = new Edge(item.Points[i], item.Points[0]);
+                        else line = new Edge(item.Points[i], item.Points[i + 1]);
+                        if (line.Distance(p) > -5 && line.Distance(p) < 5) SelectedPrim = (Primitive)item;
+                    }
+                }
 
-                   // if (item.Points.Contains(p) || item.Points.Contains(new Point2D (p.X+1,p.Y+1)) 
-                      //  || item.Points.Contains(new Point2D(p.X - 1, p.Y - 1)))
-                     //   SelectedPrim = (Primitive)item;
+                if (SelectedPrimitive is Point2D)
+                    lastPoint = (Point2D)SelectedPrimitive;
+                else if (SelectedPrimitive is Polygon)
+                    lastPolygon = (Polygon)SelectedPrimitive;
+                else if (SelectedPrimitive is Edge)
+                {
+                    previousEdge = lastEdge;
+                    lastEdge = (Edge)SelectedPrimitive;
                 }
             }
                 

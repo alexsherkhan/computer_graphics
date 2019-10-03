@@ -31,6 +31,7 @@ namespace Lab4_affine_transformations
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.setPoint = new System.Windows.Forms.RadioButton();
             this.selectedPr = new System.Windows.Forms.RadioButton();
             this.rbPolygon = new System.Windows.Forms.RadioButton();
             this.rbEdge = new System.Windows.Forms.RadioButton();
@@ -60,7 +61,6 @@ namespace Lab4_affine_transformations
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.setPoint = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -85,6 +85,17 @@ namespace Lab4_affine_transformations
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Выберите примитив";
+            // 
+            // setPoint
+            // 
+            this.setPoint.AutoSize = true;
+            this.setPoint.Location = new System.Drawing.Point(8, 102);
+            this.setPoint.Margin = new System.Windows.Forms.Padding(4);
+            this.setPoint.Name = "setPoint";
+            this.setPoint.Size = new System.Drawing.Size(117, 21);
+            this.setPoint.TabIndex = 18;
+            this.setPoint.Text = "Задать точку";
+            this.setPoint.UseVisualStyleBackColor = true;
             // 
             // selectedPr
             // 
@@ -142,6 +153,7 @@ namespace Lab4_affine_transformations
             this.button2.TabIndex = 6;
             this.button2.Text = "Найти";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
             // 
@@ -172,6 +184,7 @@ namespace Lab4_affine_transformations
             this.button3.TabIndex = 9;
             this.button3.Text = "Метод углов";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -208,7 +221,7 @@ namespace Lab4_affine_transformations
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(846, 750);
+            this.pictureBox1.Size = new System.Drawing.Size(845, 750);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -242,7 +255,7 @@ namespace Lab4_affine_transformations
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(1057, 750);
-            this.splitContainer1.SplitterDistance = 846;
+            this.splitContainer1.SplitterDistance = 845;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -427,17 +440,6 @@ namespace Lab4_affine_transformations
             this.button6.Text = "Очистить сцену";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // setPoint
-            // 
-            this.setPoint.AutoSize = true;
-            this.setPoint.Location = new System.Drawing.Point(8, 102);
-            this.setPoint.Margin = new System.Windows.Forms.Padding(4);
-            this.setPoint.Name = "setPoint";
-            this.setPoint.Size = new System.Drawing.Size(117, 21);
-            this.setPoint.TabIndex = 18;
-            this.setPoint.Text = "Задать точку";
-            this.setPoint.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
