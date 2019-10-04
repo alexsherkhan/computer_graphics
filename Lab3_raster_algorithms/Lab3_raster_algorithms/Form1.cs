@@ -223,11 +223,15 @@ namespace Lab3_raster_algorithms
             Stack<Point> pixels = new Stack<Point>();
             targetColor = bmp.GetPixel(pt.X, pt.Y);
             pixels.Push(pt);
-           
+            bool[,] used = new bool[bmp.Width, bmp.Height];
 
             while (pixels.Count > 0)
             {
                 Point a = pixels.Pop();
+                if (used[a.X, a.Y])
+                {
+                    continue;
+                }
                 if (a.X < bmp.Width && a.X > 0 &&
                         a.Y < bmp.Height && a.Y > 0)
                 {
@@ -269,8 +273,9 @@ namespace Lab3_raster_algorithms
 
                         replacementColor = img.GetPixel(x,y);
                         bmp.SetPixel(a.X, a.Y, replacementColor);
-                        
-                            pixels.Push(new Point(a.X - 1, a.Y));
+                        used[a.X, a.Y] = true;
+
+                        pixels.Push(new Point(a.X - 1, a.Y));
                             pixels.Push(new Point(a.X + 1, a.Y));
                             pixels.Push(new Point(a.X, a.Y - 1));
                             pixels.Push(new Point(a.X, a.Y + 1));
@@ -283,9 +288,10 @@ namespace Lab3_raster_algorithms
             return;
         }
 
-
+        /*
         private void paintTemplate(int xImg, int yImg, int yTemplate, Color oldColor)
-        { 
+        {
+
             int xLeft = xImg - 1, xRight = xImg + 1;
 
             if (image.GetPixel(xImg, yImg).ToArgb() != oldColor.ToArgb())
@@ -346,6 +352,7 @@ namespace Lab3_raster_algorithms
             }
 
         }
+        */
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
@@ -395,8 +402,8 @@ namespace Lab3_raster_algorithms
                     
                 try
                 {
-                    //FloodFill(image, new Point(xG, yG), paletteColor, image2);
-                    paintTemplate(xG, yG, 0, curPixel);
+                    FloodFill(image, new Point(xG, yG), paletteColor, image2);
+                    //paintTemplate(xG, yG, 0, curPixel);
                 }
                 catch (StackOverflowException ex)
                 {
