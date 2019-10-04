@@ -33,7 +33,7 @@ namespace Lab4_affine_transformations
 
         private MouseEventArgs args;
         private Primitive SelectedPrim;
-        private Point2D SelectedPoint;
+      
 
         private Primitive SelectedPrimitive
         {
@@ -145,9 +145,6 @@ namespace Lab4_affine_transformations
                     shouldStartNewPolygon = false;
                 }
                 polygons[polygons.Count - 1].Points.Add(p);
-            }else if (setPoint.Checked)
-            {
-                SelectedPoint = p;
             }
             Redraw();
         }
@@ -181,7 +178,7 @@ namespace Lab4_affine_transformations
             PointF center;
             if (comboBox1.SelectedIndex == 0)
             {
-                center = new PointF(SelectedPoint.X, SelectedPoint.Y);
+                center = new PointF(lastPoint.X, lastPoint.Y);
             }
             else
             {
@@ -199,15 +196,16 @@ namespace Lab4_affine_transformations
             PointF center;
             if (comboBox1.SelectedIndex == 0)
             {
-                center = new PointF(SelectedPoint.X, SelectedPoint.Y);
+                center = new PointF(lastPoint.X, lastPoint.Y);
             }
             else
             {
                 center = ((Polygon)SelectedPrimitive).Center();
             }
-            float scale = float.Parse(comboBox3.Text)/ 100;
+            float scaleX = float.Parse(comboBox3.Text)/ 100;
+            float scaleY = float.Parse(comboBox4.Text) / 100;
             var moveToCenter = Transformation.Translate(-center.X, -center.Y);
-            Transformation rotate = Transformation.Scale(scale,scale);
+            Transformation rotate = Transformation.Scale(scaleX,scaleY);
             var moveBack = Transformation.Translate(center.X, center.Y);
             SelectedPrimitive.Apply(moveToCenter * rotate * moveBack);
             Redraw();

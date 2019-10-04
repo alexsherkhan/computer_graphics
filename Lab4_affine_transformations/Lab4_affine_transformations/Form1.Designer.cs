@@ -31,7 +31,6 @@ namespace Lab4_affine_transformations
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.setPoint = new System.Windows.Forms.RadioButton();
             this.selectedPr = new System.Windows.Forms.RadioButton();
             this.rbPolygon = new System.Windows.Forms.RadioButton();
             this.rbEdge = new System.Windows.Forms.RadioButton();
@@ -41,7 +40,6 @@ namespace Lab4_affine_transformations
             this.label3 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -61,6 +59,7 @@ namespace Lab4_affine_transformations
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -72,7 +71,6 @@ namespace Lab4_affine_transformations
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.setPoint);
             this.groupBox1.Controls.Add(this.selectedPr);
             this.groupBox1.Controls.Add(this.rbPolygon);
             this.groupBox1.Controls.Add(this.rbEdge);
@@ -85,17 +83,6 @@ namespace Lab4_affine_transformations
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Выберите примитив";
-            // 
-            // setPoint
-            // 
-            this.setPoint.AutoSize = true;
-            this.setPoint.Location = new System.Drawing.Point(8, 102);
-            this.setPoint.Margin = new System.Windows.Forms.Padding(4);
-            this.setPoint.Name = "setPoint";
-            this.setPoint.Size = new System.Drawing.Size(117, 21);
-            this.setPoint.TabIndex = 18;
-            this.setPoint.Text = "Задать точку";
-            this.setPoint.UseVisualStyleBackColor = true;
             // 
             // selectedPr
             // 
@@ -146,7 +133,7 @@ namespace Lab4_affine_transformations
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(22, 544);
+            this.button2.Location = new System.Drawing.Point(22, 519);
             this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(184, 32);
@@ -158,7 +145,7 @@ namespace Lab4_affine_transformations
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 524);
+            this.label2.Location = new System.Drawing.Point(13, 499);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(219, 17);
@@ -168,7 +155,7 @@ namespace Lab4_affine_transformations
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 580);
+            this.label3.Location = new System.Drawing.Point(4, 555);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(230, 17);
@@ -177,7 +164,7 @@ namespace Lab4_affine_transformations
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(24, 601);
+            this.button3.Location = new System.Drawing.Point(24, 576);
             this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(184, 28);
@@ -188,7 +175,7 @@ namespace Lab4_affine_transformations
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(24, 637);
+            this.button4.Location = new System.Drawing.Point(24, 612);
             this.button4.Margin = new System.Windows.Forms.Padding(4);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(184, 28);
@@ -197,19 +184,9 @@ namespace Lab4_affine_transformations
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(22, 483);
-            this.button5.Margin = new System.Windows.Forms.Padding(4);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(113, 28);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Повернуть на";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(139, 486);
+            this.textBox1.Location = new System.Drawing.Point(129, 99);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(61, 22);
@@ -222,7 +199,7 @@ namespace Lab4_affine_transformations
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(844, 750);
+            this.pictureBox1.Size = new System.Drawing.Size(843, 750);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -247,16 +224,14 @@ namespace Lab4_affine_transformations
             this.splitContainer1.Panel2.Controls.Add(this.label5);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2.Controls.Add(this.button6);
-            this.splitContainer1.Panel2.Controls.Add(this.textBox1);
             this.splitContainer1.Panel2.Controls.Add(this.button4);
             this.splitContainer1.Panel2.Controls.Add(this.button3);
-            this.splitContainer1.Panel2.Controls.Add(this.button5);
             this.splitContainer1.Panel2.Controls.Add(this.label3);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.button2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(1057, 750);
-            this.splitContainer1.SplitterDistance = 844;
+            this.splitContainer1.SplitterDistance = 843;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -273,7 +248,7 @@ namespace Lab4_affine_transformations
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(24, 713);
+            this.button9.Location = new System.Drawing.Point(24, 688);
             this.button9.Margin = new System.Windows.Forms.Padding(4);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(184, 28);
@@ -285,7 +260,7 @@ namespace Lab4_affine_transformations
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 675);
+            this.label5.Location = new System.Drawing.Point(9, 650);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.MaximumSize = new System.Drawing.Size(250, 0);
             this.label5.Name = "label5";
@@ -295,11 +270,13 @@ namespace Lab4_affine_transformations
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.comboBox4);
             this.groupBox2.Controls.Add(this.comboBox3);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.comboBox2);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.textBox3);
+            this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.textBox2);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label1);
@@ -331,7 +308,7 @@ namespace Lab4_affine_transformations
             "100"});
             this.comboBox3.Location = new System.Drawing.Point(9, 244);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(121, 24);
+            this.comboBox3.Size = new System.Drawing.Size(96, 24);
             this.comboBox3.TabIndex = 13;
             // 
             // label6
@@ -415,7 +392,7 @@ namespace Lab4_affine_transformations
             this.button8.Location = new System.Drawing.Point(9, 96);
             this.button8.Margin = new System.Windows.Forms.Padding(4);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(184, 28);
+            this.button8.Size = new System.Drawing.Size(112, 28);
             this.button8.TabIndex = 4;
             this.button8.Text = "Поворот ";
             this.button8.UseVisualStyleBackColor = true;
@@ -442,6 +419,25 @@ namespace Lab4_affine_transformations
             this.button6.Text = "Очистить сцену";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "10",
+            "20",
+            "30",
+            "40",
+            "50",
+            "60",
+            "70",
+            "80",
+            "90",
+            "100"});
+            this.comboBox4.Location = new System.Drawing.Point(111, 244);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(96, 24);
+            this.comboBox4.TabIndex = 14;
             // 
             // Form1
             // 
@@ -477,7 +473,6 @@ namespace Lab4_affine_transformations
         private Label label3;
         private Button button3;
         private Button button4;
-        private Button button5;
         private TextBox textBox1;
         private PictureBox pictureBox1;
         private SplitContainer splitContainer1;
@@ -498,7 +493,7 @@ namespace Lab4_affine_transformations
         private Label label6;
         private RadioButton selectedPr;
         private Button newPolygon;
-        private RadioButton setPoint;
+        private ComboBox comboBox4;
     }
 }
 
