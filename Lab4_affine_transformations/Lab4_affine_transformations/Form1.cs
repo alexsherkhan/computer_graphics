@@ -194,7 +194,7 @@ namespace Lab4_affine_transformations
         private void Button1_Click(object sender, EventArgs e)
         {
             PointF center;
-            if (comboBox1.SelectedIndex == 0)
+            if (comboBox2.SelectedIndex == 0)
             {
                 center = new PointF(lastPoint.X, lastPoint.Y);
             }
