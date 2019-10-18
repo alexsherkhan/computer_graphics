@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace lab5_Alina.Properties
+namespace BezierCurves.Properties
 {
 
 
