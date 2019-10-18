@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace BezierPlotter
+namespace BezierCurves
 {
     public class CPoint
     {
@@ -104,14 +104,14 @@ namespace BezierPlotter
                 {
                     var delta = e.Location - plotter.points[nodeIndex];
                     plotter.points[nodeIndex - 1] += delta;
-                    plotter.points[nodeIndex] += delta;
+                    plotter.points[nodeIndex    ] += delta;
                     plotter.points[nodeIndex + 1] += delta;
                 }
                 else
                 {
                     var oppositeArmIndex = 0 == nodeIndex % 3 ? nodeIndex + 2 : nodeIndex - 2;
                     var delta = e.Location - plotter.points[nodeIndex];
-                    plotter.points[nodeIndex] += delta;
+                    plotter.points[nodeIndex       ] += delta;
                     plotter.points[oppositeArmIndex] -= delta;
                 }
                 plotter.Invalidate();
@@ -132,8 +132,8 @@ namespace BezierPlotter
         public BezierPlotter() : base()
         {
             currentState = new InitialState(this);
-            var flags = ControlStyles.AllPaintingInWmPaint
-                      | ControlStyles.DoubleBuffer
+            var flags = ControlStyles.AllPaintingInWmPaint 
+                      | ControlStyles.DoubleBuffer 
                       | ControlStyles.UserPaint;
             SetStyle(flags, true);
         }
@@ -177,7 +177,7 @@ namespace BezierPlotter
                 var q2 = p2 * (1 - t) + p3 * t;
                 var r0 = q0 * (1 - t) + q1 * t;
                 var r1 = q1 * (1 - t) + q2 * t;
-                var b = r0 * (1 - t) + r1 * t;
+                var  b = r0 * (1 - t) + r1 * t;
                 g.DrawLine(boldPen, prev, b);
                 prev = b;
             }
