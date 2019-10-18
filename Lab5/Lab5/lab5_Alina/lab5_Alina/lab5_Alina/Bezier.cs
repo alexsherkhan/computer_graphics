@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace Bezier
+namespace BezierPlotter
 {
     public class CPoint
     {
