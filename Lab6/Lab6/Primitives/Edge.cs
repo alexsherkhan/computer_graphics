@@ -102,6 +102,11 @@ namespace Lab6.Primitives
             P2.translate(x, y, z);
         }
 
+        public void rotate(double angle, Axis a, Edge line = null)
+        {
+            P1.rotate(angle, a, line);
+            P2.rotate(angle, a, line);
+        }
 
         public void scale(float kx, float ky, float kz)
         {
