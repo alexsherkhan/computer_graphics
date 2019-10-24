@@ -191,6 +191,56 @@ namespace Lab6.Primitives
             Z = c[2];
         }
 
+        public void rotate(double angle, Axis a, Edge line = null)
+        {
+            double rangle = Math.PI * angle / 180; // угол в радианах
+
+            List<float> R = null;
+
+            float sin = (float)Math.Sin(rangle);
+            float cos = (float)Math.Cos(rangle);
+            switch (a)
+            {
+                case Axis.AXIS_X:
+                    R = new List<float> { 1,   0,     0,   0,
+                                          0,  cos,   sin,  0,
+                                          0,  -sin,  cos,  0,
+                                          0,   0,     0,   1 };
+                    break;
+                case Axis.AXIS_Y:
+                    R = new List<float> { cos,  0,  -sin,  0,
+                                           0,   1,   0,    0,
+                                          sin,  0,  cos,   0,
+                                           0,   0,   0,    1 };
+                    break;
+                case Axis.AXIS_Z:
+                    R = new List<float> { cos,   sin,  0,  0,
+                                          -sin,  cos,  0,  0,
+                                           0,     0,   1,  0,
+                                           0,     0,   0,  1 };
+                    break;
+                case Axis.OTHER:
+                    float l = Math.Sign(line.P2.X - line.P1.X);
+                    float m = Math.Sign(line.P2.Y - line.P1.Y);
+                    float n = Math.Sign(line.P2.Z - line.P1.Z);
+                    float length = (float)Math.Sqrt(l * l + m * m + n * n);
+                    l /= length; m /= length; n /= length;
+
+                    R = new List<float> {  l * l + cos * (1 - l * l),   l * (1 - cos) * m + n * sin,   l * (1 - cos) * n - m * sin,  0,
+                                          l * (1 - cos) * m - n * sin,   m * m + cos * (1 - m * m),    m * (1 - cos) * n + l * sin,  0,
+                                          l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,    n * n + cos * (1 - n * n),   0,
+                                                       0,                            0,                             0,               1 };
+
+                    break;
+            }
+            List<float> xyz = new List<float> { X, Y, Z, 1 };
+            List<float> c = mul_matrix(xyz, 1, 4, R, 4, 4);
+
+            X = c[0];
+            Y = c[1];
+            Z = c[2];
+        }
+
         public void scale(float kx, float ky, float kz)
         {
             List<float> D = new List<float> { kx, 0,  0,  0,
