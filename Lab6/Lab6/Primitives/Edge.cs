@@ -95,5 +95,20 @@ namespace Lab6.Primitives
 
             g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
         }
+
+        public void translate(float x, float y, float z)
+        {
+            P1.translate(x, y, z);
+            P2.translate(x, y, z);
+        }
+
+
+        public void scale(float kx, float ky, float kz)
+        {
+            P1.scale(kx, ky, kz);
+            P2.scale(kx, ky, kz);
+        }
     }
+
+
 }
