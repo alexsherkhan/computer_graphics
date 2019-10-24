@@ -175,7 +175,29 @@ namespace Lab6.Primitives
                     g.DrawRectangle(pen, pts[0].X, pts[0].Y, 1, 1);
             }
 
-            
+            /* ------ Affine transformations ------ */
+
+            public void translate(float x, float y, float z)
+            {
+                foreach (Point3d p in Points)
+                    p.translate(x, y, z);
+                find_center();
+            }
+
+            public void rotate(double angle, Axis a, Edge line = null)
+            {
+                foreach (Point3d p in Points)
+                    p.rotate(angle, a, line);
+                find_center();
+            }
+
+            public void scale(float kx, float ky, float kz)
+            {
+                foreach (Point3d p in Points)
+                    p.scale(kx, ky, kz);
+                find_center();
+            }
+
         }
     }
 }
