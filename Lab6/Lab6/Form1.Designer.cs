@@ -38,7 +38,6 @@
             this.trans_x = new System.Windows.Forms.TextBox();
             this.trans_y = new System.Windows.Forms.TextBox();
             this.trans_z = new System.Windows.Forms.TextBox();
-            this.rot_angle = new System.Windows.Forms.TextBox();
             this.label_scaling = new System.Windows.Forms.Label();
             this.scaling_x = new System.Windows.Forms.TextBox();
             this.scaling_y = new System.Windows.Forms.TextBox();
@@ -66,6 +65,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.angle_x = new System.Windows.Forms.TextBox();
+            this.angle_y = new System.Windows.Forms.TextBox();
+            this.angle_z = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -88,6 +90,7 @@
             this.button_cube.TabIndex = 1;
             this.button_cube.Text = "Гексаэдр";
             this.button_cube.UseVisualStyleBackColor = true;
+            this.button_cube.Click += new System.EventHandler(this.Button_cube_Click);
             // 
             // comboBox1
             // 
@@ -103,6 +106,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(180, 24);
             this.comboBox1.TabIndex = 2;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -171,15 +175,6 @@
             this.trans_z.TabIndex = 10;
             this.trans_z.Text = "0";
             // 
-            // rot_angle
-            // 
-            this.rot_angle.Location = new System.Drawing.Point(147, 142);
-            this.rot_angle.Margin = new System.Windows.Forms.Padding(4);
-            this.rot_angle.Name = "rot_angle";
-            this.rot_angle.Size = new System.Drawing.Size(89, 22);
-            this.rot_angle.TabIndex = 11;
-            this.rot_angle.Text = "0";
-            // 
             // label_scaling
             // 
             this.label_scaling.AutoSize = true;
@@ -226,6 +221,7 @@
             this.button_exec.TabIndex = 37;
             this.button_exec.Text = "Выполнить";
             this.button_exec.UseVisualStyleBackColor = true;
+            this.button_exec.Click += new System.EventHandler(this.Button_exec_Click);
             // 
             // label3
             // 
@@ -250,6 +246,7 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(276, 24);
             this.comboBox2.TabIndex = 40;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.ComboBox2_SelectedIndexChanged);
             // 
             // clear_button
             // 
@@ -330,6 +327,7 @@
             this.button_tetraeder.TabIndex = 48;
             this.button_tetraeder.Text = "Тетраэдр";
             this.button_tetraeder.UseVisualStyleBackColor = true;
+            this.button_tetraeder.Click += new System.EventHandler(this.Button_tetraeder_Click);
             // 
             // button_octaeder
             // 
@@ -340,6 +338,7 @@
             this.button_octaeder.TabIndex = 49;
             this.button_octaeder.Text = "Октаэдр";
             this.button_octaeder.UseVisualStyleBackColor = true;
+            this.button_octaeder.Click += new System.EventHandler(this.Button_octaeder_Click);
             // 
             // button_ikosaeder
             // 
@@ -350,6 +349,7 @@
             this.button_ikosaeder.TabIndex = 50;
             this.button_ikosaeder.Text = "Икосаэдр";
             this.button_ikosaeder.UseVisualStyleBackColor = true;
+            this.button_ikosaeder.Click += new System.EventHandler(this.Button_ikosaeder_Click);
             // 
             // button_dodecaeder
             // 
@@ -360,6 +360,7 @@
             this.button_dodecaeder.TabIndex = 51;
             this.button_dodecaeder.Text = "Додекаэдр";
             this.button_dodecaeder.UseVisualStyleBackColor = true;
+            this.button_dodecaeder.Click += new System.EventHandler(this.Button_dodecaeder_Click);
             // 
             // button_refl_x
             // 
@@ -370,6 +371,7 @@
             this.button_refl_x.TabIndex = 52;
             this.button_refl_x.Text = "X";
             this.button_refl_x.UseVisualStyleBackColor = true;
+            this.button_refl_x.Click += new System.EventHandler(this.Button_refl_x_Click);
             // 
             // button_refl_y
             // 
@@ -380,6 +382,7 @@
             this.button_refl_y.TabIndex = 53;
             this.button_refl_y.Text = "Y";
             this.button_refl_y.UseVisualStyleBackColor = true;
+            this.button_refl_y.Click += new System.EventHandler(this.Button_refl_y_Click);
             // 
             // button_refl_z
             // 
@@ -390,6 +393,7 @@
             this.button_refl_z.TabIndex = 54;
             this.button_refl_z.Text = "Z";
             this.button_refl_z.UseVisualStyleBackColor = true;
+            this.button_refl_z.Click += new System.EventHandler(this.Button_refl_z_Click);
             // 
             // label4
             // 
@@ -425,11 +429,42 @@
             this.label10.TabIndex = 78;
             this.label10.Text = "label10";
             // 
+            // angle_x
+            // 
+            this.angle_x.Location = new System.Drawing.Point(153, 145);
+            this.angle_x.Margin = new System.Windows.Forms.Padding(4);
+            this.angle_x.Name = "angle_x";
+            this.angle_x.Size = new System.Drawing.Size(40, 22);
+            this.angle_x.TabIndex = 79;
+            this.angle_x.Text = "0";
+            // 
+            // angle_y
+            // 
+            this.angle_y.Location = new System.Drawing.Point(203, 145);
+            this.angle_y.Margin = new System.Windows.Forms.Padding(4);
+            this.angle_y.Name = "angle_y";
+            this.angle_y.Size = new System.Drawing.Size(40, 22);
+            this.angle_y.TabIndex = 80;
+            this.angle_y.Text = "0";
+            // 
+            // angle_z
+            // 
+            this.angle_z.Location = new System.Drawing.Point(251, 145);
+            this.angle_z.Margin = new System.Windows.Forms.Padding(4);
+            this.angle_z.Name = "angle_z";
+            this.angle_z.Size = new System.Drawing.Size(40, 22);
+            this.angle_z.TabIndex = 81;
+            this.angle_z.Text = "0";
+            this.angle_z.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1211, 672);
+            this.Controls.Add(this.angle_z);
+            this.Controls.Add(this.angle_y);
+            this.Controls.Add(this.angle_x);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label4);
@@ -454,7 +489,6 @@
             this.Controls.Add(this.scaling_y);
             this.Controls.Add(this.scaling_x);
             this.Controls.Add(this.label_scaling);
-            this.Controls.Add(this.rot_angle);
             this.Controls.Add(this.trans_z);
             this.Controls.Add(this.trans_y);
             this.Controls.Add(this.trans_x);
@@ -487,7 +521,6 @@
         private System.Windows.Forms.TextBox trans_x;
         private System.Windows.Forms.TextBox trans_y;
         private System.Windows.Forms.TextBox trans_z;
-        private System.Windows.Forms.TextBox rot_angle;
         private System.Windows.Forms.Label label_scaling;
         private System.Windows.Forms.TextBox scaling_x;
         private System.Windows.Forms.TextBox scaling_y;
@@ -515,6 +548,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.TextBox angle_x;
+        private System.Windows.Forms.TextBox angle_y;
+        private System.Windows.Forms.TextBox angle_z;
     }
 }
 

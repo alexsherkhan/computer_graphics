@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Lab6.Primitives
 {
-     class Face_Affines
+     public class Face_Affines
     {
         public class Face
         {
@@ -34,36 +34,6 @@ namespace Lab6.Primitives
                 }
             }
 
-            public Face(string s)
-            {
-                Points = new List<Point3d>();
-
-                var arr = s.Split(' ');
-                //int points_cnt = int.Parse(arr[0], CultureInfo.InvariantCulture);
-                for (int i = 1; i < arr.Length; i += 3)
-                {
-                    if (string.IsNullOrEmpty(arr[i]))
-                        continue;
-                    float x = float.Parse(arr[i], CultureInfo.InvariantCulture);
-                    float y = float.Parse(arr[i + 1], CultureInfo.InvariantCulture);
-                    float z = float.Parse(arr[i + 2], CultureInfo.InvariantCulture);
-                    Point3d p = new Point3d(x, y, z);
-                    Points.Add(p);
-                }
-                find_center();
-            }
-
-            public string to_string()
-            {
-                string res = "";
-                res += Points.Count.ToString(CultureInfo.InvariantCulture) + " ";
-                foreach (var f in Points)
-                {
-                    res += f.to_string() + " ";
-                }
-
-                return res;
-            }
 
             private void find_center()
             {
@@ -81,101 +51,28 @@ namespace Lab6.Primitives
                 Center.Z /= Points.Count;
             }
 
-           
-            public void reflectX()
+            public void Apply(Transformation t)
             {
-                Center.X = -Center.X;
-                if (Points != null)
-                    foreach (var p in Points)
-                        p.reflectX();
+                foreach (var point in Points)
+                    point.Apply(t);
             }
-            public void reflectY()
-            {
-                Center.Y = -Center.Y;
-                if (Points != null)
-                    foreach (var p in Points)
-                        p.reflectY();
-            }
-            public void reflectZ()
-            {
-                Center.Z = -Center.Z;
-                if (Points != null)
-                    foreach (var p in Points)
-                        p.reflectZ();
-            }
+            public void show(Graphics g, Projection pr = 0, Pen pen = null, float k = 1000)
+             {
+                 if (pen == null)
+                     pen = Pens.Black;
 
-           
-            public List<PointF> make_perspective(float k = 1000, float z_camera = 1000)
-            {
-                List<PointF> res = new List<PointF>();
+                 if (Points.Count > 1)
+                 {
+                    for (int i = 0; i < Points.Count; ++i)
+                    {
+                        g.DrawLine(pen, Points[i].toPointF(pr), Points[(i + 1) % Points.Count].toPointF(pr));
+                    }
+                 }
+                 else if (Points.Count == 1)
+                     g.DrawRectangle(pen, (float)Points[0].X, (float)Points[0].Y, 1, 1);
+             }
 
-                foreach (Point3d p in Points)
-                {
-                    res.Add(p.make_perspective(k));
-                }
-                return res;
-            }
 
-           
-            public List<PointF> make_isometric()
-            {
-                List<PointF> res = new List<PointF>();
-
-                foreach (Point3d p in Points)
-                    res.Add(p.make_isometric());
-
-                return res;
-            }
-
-            
-            public List<PointF> make_orthographic(Axis a)
-            {
-                List<PointF> res = new List<PointF>();
-
-                foreach (Point3d p in Points)
-                    res.Add(p.make_orthographic(a));
-
-                return res;
-            }
-
-            public void show(Graphics g, Projection pr = 0, Pen pen = null, Edge camera = null, float k = 1000)
-            {
-                if (pen == null)
-                    pen = Pens.Black;
-
-                List<PointF> pts;
-
-                switch (pr)
-                {
-                    case Projection.ISOMETRIC:
-                        pts = make_isometric();
-                        break;
-                    case Projection.ORTHOGR_X:
-                        pts = make_orthographic(Axis.AXIS_X);
-                        break;
-                    case Projection.ORTHOGR_Y:
-                        pts = make_orthographic(Axis.AXIS_Y);
-                        break;
-                    case Projection.ORTHOGR_Z:
-                        pts = make_orthographic(Axis.AXIS_Z);
-                        break;
-                    default:
-                        if (camera != null)
-                            pts = make_perspective(k, camera.P1.Z);
-                        else pts = make_perspective(k);
-                        break;
-                }
-
-                if (pts.Count > 1)
-                {
-                    g.DrawLines(pen, pts.ToArray());
-                    g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-                }
-                else if (pts.Count == 1)
-                    g.DrawRectangle(pen, pts[0].X, pts[0].Y, 1, 1);
-            }
-
-            
         }
     }
 }

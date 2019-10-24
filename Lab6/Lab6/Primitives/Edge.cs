@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Lab6.Primitives
 {
-    class Edge
+    public class Edge
     {
         public Point3d P1 { get; set; }
         public Point3d P2 { get; set; }
@@ -29,90 +29,13 @@ namespace Lab6.Primitives
                 float.Parse(arr[4], CultureInfo.InvariantCulture),
                 float.Parse(arr[5], CultureInfo.InvariantCulture));
         }
-
-        // get points for central (perspective) projection
-        private List<PointF> make_perspective(int k = 1000)
+        public void Apply(Transformation t)
         {
-            List<PointF> res = new List<PointF>
-            {
-                P1.make_perspective(k),
-                P2.make_perspective(k)
-            };
-
-            return res;
+            P1.Apply(t);
+            P2.Apply(t);
         }
 
-        private List<PointF> make_orthographic(Axis a)
-        {
-            List<PointF> res = new List<PointF>
-            {
-                P1.make_orthographic(a),
-                P2.make_orthographic(a)
-            };
-            return res;
-        }
-
-        private List<PointF> make_isometric()
-        {
-            List<PointF> res = new List<PointF>
-            {
-                P1.make_isometric(),
-                P2.make_isometric()
-            };
-            return res;
-        }
-
-        private void show_perspective(Graphics g, Pen pen)
-        {
-            var pts = make_perspective();
-            g.DrawLine(pen, pts[0], pts[1]);
-        }
-
-        public void show(Graphics g, Projection pr = 0, Pen pen = null)
-        {
-            if (pen == null)
-                pen = Pens.Black;
-
-            List<PointF> pts;
-            switch (pr)
-            {
-                case Projection.ISOMETRIC:
-                    pts = make_isometric();
-                    break;
-                case Projection.ORTHOGR_X:
-                    pts = make_orthographic(Axis.AXIS_X);
-                    break;
-                case Projection.ORTHOGR_Y:
-                    pts = make_orthographic(Axis.AXIS_Y);
-                    break;
-                case Projection.ORTHOGR_Z:
-                    pts = make_orthographic(Axis.AXIS_Z);
-                    break;
-                default:
-                    pts = make_perspective();
-                    break;
-            }
-
-            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-        }
-
-        public void translate(float x, float y, float z)
-        {
-            P1.translate(x, y, z);
-            P2.translate(x, y, z);
-        }
-
-        public void rotate(double angle, Axis a, Edge line = null)
-        {
-            P1.rotate(angle, a, line);
-            P2.rotate(angle, a, line);
-        }
-
-        public void scale(float kx, float ky, float kz)
-        {
-            P1.scale(kx, ky, kz);
-            P2.scale(kx, ky, kz);
-        }
+       
     }
 
 

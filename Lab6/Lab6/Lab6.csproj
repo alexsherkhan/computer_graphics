@@ -55,6 +55,7 @@
     <Compile Include="Primitives\Face.cs" />
     <Compile Include="Primitives\Point3d.cs" />
     <Compile Include="Primitives\Polyhedron.cs" />
+    <Compile Include="Primitives\Transformation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
