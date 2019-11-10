@@ -206,5 +206,21 @@ namespace Lab6
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = saveFileDialog1.FileName;
+            string text = "";
+            if (figure != null)
+                text = figure.save_obj();
+            System.IO.File.WriteAllText(filename, text);
+        }
     }
 }

@@ -32,6 +32,12 @@ namespace Lab6.Primitives
             Z = p.Z;
         }
 
+        public string to_string()
+        {
+            return X.ToString(CultureInfo.InvariantCulture) + " " +
+                Y.ToString(CultureInfo.InvariantCulture) + " " +
+                Z.ToString(CultureInfo.InvariantCulture);
+        }
 
         public void Apply(Transformation t)
         {

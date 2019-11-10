@@ -18,6 +18,8 @@ namespace Lab6.Primitives
         public Point3d Center { get; set; } = new Point3d(0, 0, 0);
         public float Cube_size { get; set; }
 
+        private Dictionary<Point3d, int> point_to_ind = null;
+
         public Polyhedron(List<Face> fs = null)
         {
             if (fs != null)
@@ -32,6 +34,48 @@ namespace Lab6.Primitives
             Faces = polyhedron.Faces.Select(face => new Face(face)).ToList();
             Center = new Point3d(polyhedron.Center);
             Cube_size = polyhedron.Cube_size;
+        }
+
+        public string save_obj()
+        {
+            string res = "";
+            point_to_ind = new Dictionary<Point3d, int>(new Point3dComparer());
+            int ind = 1;
+            foreach (Face f in Faces)
+                foreach (Point3d p in f.Points)
+                    if (!point_to_ind.ContainsKey(p))
+                    {
+                        point_to_ind[p] = ind;
+                        ++ind;
+                    }
+
+            foreach (var k in point_to_ind)
+            {
+                res += "v " + k.Key.to_string() + "\n";
+            }
+
+            res += "# " + point_to_ind.Count.ToString() + " vertices\n";
+
+            foreach (Face f in Faces)
+            {
+                res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[1]].ToString() + " " +
+                                  point_to_ind[f.Points[2]].ToString() + "\n";
+
+                if (f.Points.Count > 3)
+                    res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[2]].ToString() + " " +
+                                  point_to_ind[f.Points[3]].ToString() + "\n";
+
+                if (f.Points.Count > 4)
+                    res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[3]].ToString() + " " +
+                                  point_to_ind[f.Points[4]].ToString() + "\n";
+
+            }
+
+            res += "# " + Faces.Count.ToString() + " faces";
+            return res;
         }
 
 
