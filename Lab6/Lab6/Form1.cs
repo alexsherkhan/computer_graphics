@@ -30,6 +30,8 @@ namespace Lab6
         public Form1()
         {
             InitializeComponent();
+            openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+            saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
@@ -205,6 +207,33 @@ namespace Lab6
         private void TextBox3_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        // open_file_dialog
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            string fileText = System.IO.File.ReadAllText(filename);
+
+            figure = new Polyhedron(fileText);
+            g.Clear(Color.White);
+            figure.show(g, pr);
+     
+            label10.Text = Math.Round(figure.Center.X).ToString() + ", " + Math.Round(figure.Center.Y).ToString() + ", " + Math.Round(figure.Center.Z).ToString();
+        }
+
+        // save_file_dialog
+        private void button2_Click(object sender, EventArgs e)
+        {
+             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = saveFileDialog1.FileName;
+            string text = "";
+            if (figure != null)
+                text = figure.save_obj();
+            System.IO.File.WriteAllText(filename, text);
         }
     }
 }
