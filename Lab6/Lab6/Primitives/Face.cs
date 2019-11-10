@@ -34,6 +34,22 @@ namespace Lab6.Primitives
                 }
             }
 
+            //Load from file
+            public Face(string s, List<Point3d> pp)
+            {
+                Points = new List<Point3d>();
+
+                var arr = s.Split(' ');
+                //int points_cnt = int.Parse(arr[0], CultureInfo.InvariantCulture);
+                for (int i = 1; i < arr.Length; ++i)
+                {
+                    if (string.IsNullOrEmpty(arr[i]))
+                        continue;
+                    Point3d p = pp[int.Parse(arr[i], CultureInfo.InvariantCulture)-1]; 
+                    Points.Add(p);
+                }
+                find_center();
+            }
 
             private void find_center()
             {

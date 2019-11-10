@@ -25,6 +25,20 @@ namespace Lab6.Primitives
             Z = z;
         }
 
+        //Load from file
+        public Point3d(string s)
+        {
+            var arr = s.Split(' ');
+
+            float x = float.Parse(arr[1], CultureInfo.InvariantCulture);
+            float y = float.Parse(arr[2], CultureInfo.InvariantCulture);
+            float z = float.Parse(arr[3], CultureInfo.InvariantCulture);
+            X = x;
+            Y = y;
+            Z = z;
+
+        }
+
         public Point3d(Point3d p)
         {
             X = p.X;

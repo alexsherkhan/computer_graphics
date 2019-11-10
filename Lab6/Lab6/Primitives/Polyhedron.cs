@@ -36,6 +36,41 @@ namespace Lab6.Primitives
             Cube_size = polyhedron.Cube_size;
         }
 
+        //Load from file 
+        public Polyhedron(string s, int mode = MODE_POL)
+        {
+            Faces = new List<Face>();
+            List<Point3d> Points = new List<Point3d>();
+            
+            switch (mode)
+            {
+                case MODE_POL:
+                    var arr1 = s.Split('\n');
+                    //int faces_cnt = int.Parse(arr1[0], CultureInfo.InvariantCulture);
+                    for (int i = 0; i < arr1.Length-1; ++i)
+                    {
+                        if (string.IsNullOrEmpty(arr1[i]))
+                            continue;
+                        if (arr1[i][0] == 'v')
+                        {
+                            Point3d p = new Point3d(arr1[i]);
+                            Points.Add(p);
+                        }
+
+                        if (arr1[i][0] == 'f')
+                        {
+                            Face f = new Face(arr1[i], Points);
+                            Faces.Add(f);
+                        }
+                    }
+                    find_center();
+                    break;
+                case MODE_ROT:
+                    break;
+                default: break;
+            }
+        }
+
         public string save_obj()
         {
             string res = "";
@@ -58,17 +93,21 @@ namespace Lab6.Primitives
 
             foreach (Face f in Faces)
             {
-                res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                if (f.Points.Count == 3)
+                    res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
                                   point_to_ind[f.Points[1]].ToString() + " " +
                                   point_to_ind[f.Points[2]].ToString() + "\n";
 
-                if (f.Points.Count > 3)
+                if (f.Points.Count == 4)
                     res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[1]].ToString() + " " +
                                   point_to_ind[f.Points[2]].ToString() + " " +
                                   point_to_ind[f.Points[3]].ToString() + "\n";
 
                 if (f.Points.Count > 4)
                     res += "f " + point_to_ind[f.Points[0]].ToString() + " " +
+                                  point_to_ind[f.Points[1]].ToString() + " " +
+                                  point_to_ind[f.Points[2]].ToString() + " " +
                                   point_to_ind[f.Points[3]].ToString() + " " +
                                   point_to_ind[f.Points[4]].ToString() + "\n";
 
