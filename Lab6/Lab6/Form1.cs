@@ -237,6 +237,42 @@ namespace Lab6
             System.IO.File.WriteAllText(filename, text);
         }
 
+
+        // rotation_figure
+        private void button33_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            string fileText = System.IO.File.ReadAllText(filename);
+
+            figure = new Polyhedron(fileText, Polyhedron.MODE_ROT);
+            g.Clear(Color.White);
+            figure.show(g, pr);
+         
+
+           // label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
+        }
+
+        private void clear_button_Click(object sender, EventArgs e)
+        {
+            foreach (var c in Controls)
+            {
+                if (c is TextBox)
+                {
+                    TextBox t = c as TextBox;
+                    if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z" || t.Name == "rot_line_x2" ||
+                            t.Name == "rot_line_y2" || t.Name == "rot_line_z2")
+                        t.Text = "1";
+                    else t.Text = "0";
+
+                }
+            }
+            
+            g.Clear(Color.White);
+            figure.show(g, pr, new_fig);
+         }
+
         private void Button3_Click(object sender, EventArgs e)
         {
             Form2 form2 = new Form2();
