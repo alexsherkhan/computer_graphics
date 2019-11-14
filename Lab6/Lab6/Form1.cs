@@ -235,5 +235,21 @@ namespace Lab6
                 text = figure.save_obj();
             System.IO.File.WriteAllText(filename, text);
         }
+
+        // rotation_figure
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            string fileText = System.IO.File.ReadAllText(filename);
+
+            figure = new Polyhedron(fileText, Polyhedron.MODE_ROT);
+            g.Clear(Color.White);
+            figure.show(g, pr);
+         
+
+           // label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
+        }
     }
 }
