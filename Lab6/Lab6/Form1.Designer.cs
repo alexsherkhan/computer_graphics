@@ -492,7 +492,7 @@
             this.button33.TabIndex = 84;
             this.button33.Text = "Фигура вращения";
             this.button33.UseVisualStyleBackColor = true;
-            this.button33.Click += new System.EventHandler(this.button3_Click);
+            this.button33.Click += new System.EventHandler(this.button33_Click);
             // 
             // Form1
             // 

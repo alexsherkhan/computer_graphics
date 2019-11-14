@@ -237,7 +237,7 @@ namespace Lab6
         }
 
         // rotation_figure
-        private void button3_Click(object sender, EventArgs e)
+        private void button33_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
