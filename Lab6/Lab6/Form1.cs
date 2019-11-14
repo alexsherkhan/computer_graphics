@@ -251,5 +251,24 @@ namespace Lab6
 
            // label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
+
+        private void clear_button_Click(object sender, EventArgs e)
+        {
+            foreach (var c in Controls)
+            {
+                if (c is TextBox)
+                {
+                    TextBox t = c as TextBox;
+                    if (t.Name == "scaling_x" || t.Name == "scaling_y" || t.Name == "scaling_z" || t.Name == "rot_line_x2" ||
+                            t.Name == "rot_line_y2" || t.Name == "rot_line_z2")
+                        t.Text = "1";
+                    else t.Text = "0";
+
+                }
+            }
+            
+            g.Clear(Color.White);
+            figure.show(g, pr, new_fig);
+        }
     }
 }
