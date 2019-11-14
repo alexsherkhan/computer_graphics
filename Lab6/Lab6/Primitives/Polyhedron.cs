@@ -20,6 +20,7 @@ namespace Lab6.Primitives
 
         private Dictionary<Point3d, int> point_to_ind = null;
 
+
         public Polyhedron(List<Face> fs = null)
         {
             if (fs != null)

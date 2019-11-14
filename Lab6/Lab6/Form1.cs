@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Lab6.Primitives.Face_Affines;
 
 namespace Lab6
 {
@@ -236,6 +237,7 @@ namespace Lab6
             System.IO.File.WriteAllText(filename, text);
         }
 
+
         // rotation_figure
         private void button33_Click(object sender, EventArgs e)
         {
@@ -268,6 +270,55 @@ namespace Lab6
             }
             
             g.Clear(Color.White);
+            figure.show(g, pr, new_fig);
+         }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.ShowDialog();
+
+            var f = form2.f;
+            float x0 = form2.X0;
+            float x1 = form2.X1;
+            float y0 = form2.Y0;
+            float y1 = form2.Y1;
+            int cnt_of_breaks = form2.Cnt_of_breaks;
+
+            form2.Dispose();
+
+            ReverseFloatComparer fcmp = new ReverseFloatComparer();
+
+            float dx = (Math.Abs(x0) + Math.Abs(x1)) / cnt_of_breaks;
+            float dy = (Math.Abs(y0) + Math.Abs(y1)) / cnt_of_breaks;
+
+            List<Face> faces = new List<Face>();
+            List<Point3d> pts0 = new List<Point3d>();
+            List<Point3d> pts1 = new List<Point3d>();
+
+            for (float x = x0; x < x1; x += dx)
+            {
+                for (float y = y0; y < y1; y += dy)
+                {
+                    float z = f(x, y);
+                    pts1.Add(new Point3d(x, y, z));
+                }
+                if (pts0.Count != 0)
+                    for (int i = 1; i < pts0.Count; ++i)
+                    {
+                        faces.Add(new Face(new List<Point3d>() {
+                            new Point3d(pts0[i - 1]), new Point3d(pts1[i - 1]),
+                            new Point3d(pts1[i]), new Point3d(pts0[i])
+                        }));
+                    }
+                pts0.Clear();
+                pts0 = pts1;
+                pts1 = new List<Point3d>();
+            }
+
+            g.Clear(Color.White);
+            figure = new Polyhedron(faces);
+            figure.Apply(Transformation.Scale(5, 5, 5));
             figure.show(g, pr, new_fig);
         }
     }
