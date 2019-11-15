@@ -506,6 +506,55 @@ namespace Lab6.Primitives
 
             find_center();
         }
+        private void rotate(Axis a, double angleX, double angleY, double angleZ, Edge line)
+        {
+            switch (a)
+            {
+                case Axis.OTHER:
+                    double Ax = (line.P1.X + line.P2.X) / 2,
+                        Ay = (line.P1.Y + line.P2.Y) / 2,
+                        Az = (line.P1.Z + line.P2.Z) / 2;
+                    this.Apply(Transformation.Translate(-Ax, -Ay, Az)
+                               * Transformation.RotateX(angleX)
+                               * Transformation.RotateY(angleY)
+                               * Transformation.RotateZ(angleZ)
+                               * Transformation.Translate(Ax, Ay, Az)
+                               );
+                    break;
+                default:
+                    this.Apply(Transformation.RotateX(angleX)
+                                * Transformation.RotateY(angleY)
+                                * Transformation.RotateZ(angleZ)
+                                );
+                    break;
+
+            }
+        }
+    }
+
+
+   
+
+    public void show_camera(Graphics g, Camera camera, Pen pen = null)
+    {
+        if (is_graph)
+            floating_horizon(g, camera, pen);
+        else
+            foreach (Face f in Faces)
+            {
+                f.find_normal(Center, camera.view);
+                if (f.IsVisible)
+                {
+                    //float k = (float)Math.Sqrt(
+                    //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
+                    //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
+                    //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
+                    //List<PointF> pts = f.make_perspective(k/*1000*/);
+                    //g.DrawLines(pen, pts.ToArray());
+                    //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+                    f.show(g, Projection.PERSPECTIVE, pen, camera.view); //, camera.P1.Z);
+                }
+            }
     }
 
     public sealed class Point3dComparer : IEqualityComparer<Point3d>
