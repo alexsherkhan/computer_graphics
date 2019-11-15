@@ -321,5 +321,9 @@ namespace Lab6
             figure.Apply(Transformation.Scale(5, 5, 5));
             figure.show(g, pr, new_fig);
         }
+
+        private void camera_y_Click(object sender, EventArgs e)
+        {
+                    }
     }
 }
