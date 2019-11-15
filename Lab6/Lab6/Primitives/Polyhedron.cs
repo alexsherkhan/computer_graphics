@@ -67,6 +67,19 @@ namespace Lab6.Primitives
                     find_center();
                     break;
                 case MODE_ROT:
+                    var arr2 = s.Split('\n');
+                    int cnt_breaks = int.Parse(arr2[0], CultureInfo.InvariantCulture);
+                    Edge rot_line = new Edge(arr2[1]);
+                    int cnt_points = int.Parse(arr2[2], CultureInfo.InvariantCulture);
+                    var arr3 = arr2[3].Split(' ');
+                    List<Point3d> pts = new List<Point3d>();
+                    for (int i = 0; i < 3 * cnt_points; i += 3)
+                        pts.Add(new Point3d(
+                            float.Parse(arr3[i], CultureInfo.InvariantCulture),
+                            float.Parse(arr3[i + 1], CultureInfo.InvariantCulture),
+                            float.Parse(arr3[i + 2], CultureInfo.InvariantCulture)));
+                   make_rotation_figure(cnt_breaks, rot_line, pts);
+
                     break;
                 default: break;
             }
@@ -506,55 +519,38 @@ namespace Lab6.Primitives
 
             find_center();
         }
-        private void rotate(Axis a, double angleX, double angleY, double angleZ, Edge line)
+
+        private void make_rotation_figure(int cnt_breaks, Edge rot_line, List<Point3d> pts)
         {
-            switch (a)
+             double angle = 360.0 / cnt_breaks;
+             angle = angle / 180.0 * Math.PI;
+
+            double Ax = rot_line.P1.X, Ay = rot_line.P1.Y, Az = rot_line.P1.Z;
+
+            foreach (var p in pts)
+                p.Apply(Transformation.Translate(-Ax, -Ay, -Az));
+
+            List<Point3d> new_pts = new List<Point3d>();
+            foreach (var p in pts)
+                new_pts.Add(new Point3d(p.X, p.Y, p.Z));
+
+
+            for (int i = 0; i < cnt_breaks; ++i)
             {
-                case Axis.OTHER:
-                    double Ax = (line.P1.X + line.P2.X) / 2,
-                        Ay = (line.P1.Y + line.P2.Y) / 2,
-                        Az = (line.P1.Z + line.P2.Z) / 2;
-                    this.Apply(Transformation.Translate(-Ax, -Ay, Az)
-                               * Transformation.RotateX(angleX)
-                               * Transformation.RotateY(angleY)
-                               * Transformation.RotateZ(angleZ)
-                               * Transformation.Translate(Ax, Ay, Az)
-                               );
-                    break;
-                default:
-                    this.Apply(Transformation.RotateX(angleX)
-                                * Transformation.RotateY(angleY)
-                                * Transformation.RotateZ(angleZ)
-                                );
-                    break;
-
-            }
-        }
-    }
-
-
-   
-
-    public void show_camera(Graphics g, Camera camera, Pen pen = null)
-    {
-        if (is_graph)
-            floating_horizon(g, camera, pen);
-        else
-            foreach (Face f in Faces)
-            {
-                f.find_normal(Center, camera.view);
-                if (f.IsVisible)
+                foreach (var np in new_pts)
+                    np.Apply(Transformation.RotateY(angle));
+                for (int j = 1; j < pts.Count; ++j)
                 {
-                    //float k = (float)Math.Sqrt(
-                    //    (camera.P1.X - Center.X) * (camera.P1.X - Center.X) + 
-                    //    (camera.P1.Y - Center.Y) * (camera.P1.Y - Center.Y) +
-                    //    (camera.P1.Z - Center.Z) * (camera.P1.Z - Center.Z));
-                    //List<PointF> pts = f.make_perspective(k/*1000*/);
-                    //g.DrawLines(pen, pts.ToArray());
-                    //g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
-                    f.show(g, Projection.PERSPECTIVE, pen, camera.view); //, camera.P1.Z);
+                    Face f = new Face(new List<Point3d>(){ new Point3d(pts[j - 1]), new Point3d(new_pts[j - 1]),
+                        new Point3d(new_pts[j]), new Point3d(pts[j])});
+                    Faces.Add(f);
                 }
+                foreach (var p in pts)
+                    p.Apply(Transformation.RotateY(angle));
             }
+
+            find_center();
+        }
     }
 
     public sealed class Point3dComparer : IEqualityComparer<Point3d>
