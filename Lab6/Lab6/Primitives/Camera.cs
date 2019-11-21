@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Lab6.Primitives
 {
@@ -17,11 +18,14 @@ namespace Lab6.Primitives
         new Edge(new Point3d(0, 0, 0), new Point3d(0, 0, 100))
         };
 
+        private PictureBox pictureBox;
+
         public CameraMode mode = CameraMode.Simple;
 
-        public Camera(Polyhedron polyhedron)
+        public Camera(Polyhedron polyhedron, PictureBox pictureBox)
         {
             camera_figure = polyhedron;
+            this.pictureBox = pictureBox;
         }
 
         private void show_lines(Graphics g)
@@ -50,6 +54,7 @@ namespace Lab6.Primitives
                     camera_figure.show(g, Projection.PERSPECTIVE, pen, true, coords);
                     break;
                 case CameraMode.Buffer:
+                    show_z_buff();
                     break;
             }
 
@@ -58,6 +63,25 @@ namespace Lab6.Primitives
         public void fiqureApply(Transformation t)
         {
             camera_figure.Apply(t);
+        }
+
+        private void show_z_buff()
+        {
+            int[] buff = new int[pictureBox.Width * pictureBox.Height];
+            int[] colors = new int[pictureBox.Width * pictureBox.Height];
+
+            camera_figure.calc_z_buff(new Edge(new Point3d(0, 0, 100), new Point3d(0, 0, 250)), pictureBox.Width, pictureBox.Height, out buff, out colors);
+            Bitmap bmp = pictureBox.Image as Bitmap;
+
+
+            for (int i = 0; i < pictureBox.Width; ++i)
+                for (int j = 0; j < pictureBox.Height; ++j)
+                {
+                    Color c = Color.FromArgb(buff[i * pictureBox.Height + j], buff[i * pictureBox.Height + j], buff[i * pictureBox.Height + j]);
+                    bmp.SetPixel(i, j, c);
+                }
+
+            pictureBox.Refresh();
         }
 
         public void Apply(Transformation t)

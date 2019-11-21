@@ -182,7 +182,7 @@ namespace Lab6
                     break;
             }
             CameraMode oldMode = camera == null ? CameraMode.Simple : camera.mode;
-            camera= new Camera(new Polyhedron(figure));
+            camera= new Camera(new Polyhedron(figure), pictureBox3);
             camera.setMode(oldMode);
             camera.Apply(Transformation.Identity());
             figure.show(g, pr);
@@ -194,7 +194,7 @@ namespace Lab6
             clearScenes();
             figure = new Polyhedron(fileText, mode);
             CameraMode oldMode = camera == null ? CameraMode.Simple : camera.mode;
-            camera = new Camera(new Polyhedron(figure));
+            camera = new Camera(new Polyhedron(figure), pictureBox3);
             camera.setMode(oldMode);
             camera.Apply(Transformation.Identity());
             figure.show(g, pr);
@@ -388,25 +388,6 @@ namespace Lab6
             camera.show(camera_g);
         }
 
-        private void show_z_buff()
-        {
-            int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
-            int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
-
-            figure.calc_z_buff(new Edge(new Point3d (0, 0, 100), new Point3d(0, 0, 250)), pictureBox3.Width, pictureBox3.Height, out buff, out colors);
-            Bitmap bmp = pictureBox3.Image as Bitmap;
-
-
-            for (int i = 0; i < pictureBox3.Width; ++i)
-                for (int j = 0; j < pictureBox3.Height; ++j)
-                {
-                    Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
-                    bmp.SetPixel(i, j, c);
-                }
-
-            pictureBox3.Refresh();
-        }
-
     
         private void radioButton2_Checked(object sender, EventArgs e)
         {
@@ -414,9 +395,11 @@ namespace Lab6
             {
                 if (radioButton2.Checked)
                 {
-                    show_z_buff();
+                    camera.setMode(CameraMode.Buffer);
                 }
             }
+
+            camera.show(camera_g);
 
 
         }
