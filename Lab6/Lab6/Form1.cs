@@ -375,8 +375,7 @@ namespace Lab6
 
         private void Button4_Click(object sender, EventArgs e)
         {
-            double old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
-            camera.Apply(Transformation.Translate(-old_x, -old_y, -old_z));
+            
             double rotX = -Double.Parse(camera_x_rotate.Text) / 180 * Math.PI;
             double rotY = -Double.Parse(camera_y_rotate.Text) / 180 * Math.PI;
             double rotZ = -Double.Parse(camera_z_rotate.Text) / 180 * Math.PI;
@@ -384,7 +383,6 @@ namespace Lab6
                                 * Transformation.RotateY(rotY)
                                 * Transformation.RotateZ(rotZ)
                                 );
-            camera.Apply(Transformation.Translate(old_x, old_y, old_z));
             camera_g.Clear(Color.White);
             camera.show(camera_g);
         }
