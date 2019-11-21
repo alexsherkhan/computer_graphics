@@ -80,10 +80,13 @@
             this.trans_y_camera = new System.Windows.Forms.TextBox();
             this.trans_x_camera = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.camera_z = new System.Windows.Forms.Label();
-            this.camera_y = new System.Windows.Forms.Label();
-            this.camera_x = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.camera_translation = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.camera_x_rotate = new System.Windows.Forms.TextBox();
+            this.camera_y_rotate = new System.Windows.Forms.TextBox();
+            this.camera_z_rotate = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
@@ -564,7 +567,6 @@
             // 
             // trans_z_camera
             // 
-            this.trans_z_camera.Enabled = false;
             this.trans_z_camera.Location = new System.Drawing.Point(1468, 711);
             this.trans_z_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_z_camera.Name = "trans_z_camera";
@@ -574,7 +576,6 @@
             // 
             // trans_y_camera
             // 
-            this.trans_y_camera.Enabled = false;
             this.trans_y_camera.Location = new System.Drawing.Point(1419, 711);
             this.trans_y_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_y_camera.Name = "trans_y_camera";
@@ -584,8 +585,7 @@
             // 
             // trans_x_camera
             // 
-            this.trans_x_camera.Enabled = false;
-            this.trans_x_camera.Location = new System.Drawing.Point(1369, 711);
+            this.trans_x_camera.Location = new System.Drawing.Point(1367, 711);
             this.trans_x_camera.Margin = new System.Windows.Forms.Padding(4);
             this.trans_x_camera.Name = "trans_x_camera";
             this.trans_x_camera.Size = new System.Drawing.Size(40, 22);
@@ -601,33 +601,6 @@
             this.label5.TabIndex = 86;
             this.label5.Text = "Camera";
             // 
-            // camera_z
-            // 
-            this.camera_z.AutoSize = true;
-            this.camera_z.Location = new System.Drawing.Point(1311, 679);
-            this.camera_z.Name = "camera_z";
-            this.camera_z.Size = new System.Drawing.Size(32, 17);
-            this.camera_z.TabIndex = 89;
-            this.camera_z.Text = "500";
-            // 
-            // camera_y
-            // 
-            this.camera_y.AutoSize = true;
-            this.camera_y.Location = new System.Drawing.Point(1273, 679);
-            this.camera_y.Name = "camera_y";
-            this.camera_y.Size = new System.Drawing.Size(16, 17);
-            this.camera_y.TabIndex = 88;
-            this.camera_y.Text = "0";
-            // 
-            // camera_x
-            // 
-            this.camera_x.AutoSize = true;
-            this.camera_x.Location = new System.Drawing.Point(1235, 679);
-            this.camera_x.Name = "camera_x";
-            this.camera_x.Size = new System.Drawing.Size(16, 17);
-            this.camera_x.TabIndex = 87;
-            this.camera_x.Text = "0";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -638,11 +611,76 @@
             this.label6.TabIndex = 90;
             this.label6.Text = "Смещение (x, y, z)";
             // 
+            // camera_translation
+            // 
+            this.camera_translation.Location = new System.Drawing.Point(1124, 705);
+            this.camera_translation.Margin = new System.Windows.Forms.Padding(4);
+            this.camera_translation.Name = "camera_translation";
+            this.camera_translation.Size = new System.Drawing.Size(100, 28);
+            this.camera_translation.TabIndex = 101;
+            this.camera_translation.Text = "Выполнить";
+            this.camera_translation.UseVisualStyleBackColor = true;
+            this.camera_translation.Click += new System.EventHandler(this.Camera_translation_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(1124, 755);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(100, 28);
+            this.button4.TabIndex = 102;
+            this.button4.Text = "Выполнить";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(1232, 761);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(267, 17);
+            this.label7.TabIndex = 103;
+            this.label7.Text = "Поворот камеры относительно фигуры";
+            // 
+            // camera_x_rotate
+            // 
+            this.camera_x_rotate.Location = new System.Drawing.Point(1235, 791);
+            this.camera_x_rotate.Margin = new System.Windows.Forms.Padding(4);
+            this.camera_x_rotate.Name = "camera_x_rotate";
+            this.camera_x_rotate.Size = new System.Drawing.Size(40, 22);
+            this.camera_x_rotate.TabIndex = 104;
+            this.camera_x_rotate.Text = "0";
+            // 
+            // camera_y_rotate
+            // 
+            this.camera_y_rotate.Location = new System.Drawing.Point(1283, 791);
+            this.camera_y_rotate.Margin = new System.Windows.Forms.Padding(4);
+            this.camera_y_rotate.Name = "camera_y_rotate";
+            this.camera_y_rotate.Size = new System.Drawing.Size(40, 22);
+            this.camera_y_rotate.TabIndex = 105;
+            this.camera_y_rotate.Text = "0";
+            // 
+            // camera_z_rotate
+            // 
+            this.camera_z_rotate.Location = new System.Drawing.Point(1331, 791);
+            this.camera_z_rotate.Margin = new System.Windows.Forms.Padding(4);
+            this.camera_z_rotate.Name = "camera_z_rotate";
+            this.camera_z_rotate.Size = new System.Drawing.Size(40, 22);
+            this.camera_z_rotate.TabIndex = 106;
+            this.camera_z_rotate.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1924, 927);
+            this.Controls.Add(this.camera_z_rotate);
+            this.Controls.Add(this.camera_y_rotate);
+            this.Controls.Add(this.camera_x_rotate);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.camera_translation);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.button_exec_camera);
@@ -650,9 +688,6 @@
             this.Controls.Add(this.trans_y_camera);
             this.Controls.Add(this.trans_x_camera);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.camera_z);
-            this.Controls.Add(this.camera_y);
-            this.Controls.Add(this.camera_x);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.button33);
@@ -762,10 +797,13 @@
         private System.Windows.Forms.TextBox trans_y_camera;
         private System.Windows.Forms.TextBox trans_x_camera;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label camera_z;
-        private System.Windows.Forms.Label camera_y;
-        private System.Windows.Forms.Label camera_x;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button camera_translation;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox camera_x_rotate;
+        private System.Windows.Forms.TextBox camera_y_rotate;
+        private System.Windows.Forms.TextBox camera_z_rotate;
     }
 }
 

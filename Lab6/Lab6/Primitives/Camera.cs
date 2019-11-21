@@ -9,55 +9,52 @@ namespace Lab6.Primitives
 {
     public class Camera
     {
-        public Edge view = new Edge(new Point3d(0, 0, 300), new Point3d(0, 0, 250));
-        Polyhedron small_cube = new Polyhedron();
-        public Edge rot_line { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
 
-        public Camera(int w, int h)
+        private Polyhedron camera_figure = new Polyhedron();
+        private Point3d coords = new Point3d(0, 0, 100);
+        private List<Edge> lines = new List < Edge >{new Edge(new Point3d(0, 0, 0), new Point3d(100, 0, 0)),
+        new Edge(new Point3d(0, 0, 0), new Point3d(0, 100, 0)),
+        new Edge(new Point3d(0, 0, 0), new Point3d(0, 0, 100))
+        };
+
+        public Camera(Polyhedron polyhedron)
         {
-            int camera_half_size = 5;
-            small_cube.make_hexahedron(camera_half_size);
-            small_cube.Apply(Transformation.Translate(view.P1.X, view.P1.Y, view.P1.Z));
-            set_rot_line();
-            Width = w;
-            Height = h;
+            camera_figure = polyhedron;
         }
 
-        public void set_rot_line(Axis a = Axis.AXIS_X)
+        private void show_lines(Graphics g)
         {
-            Point3d p1, p2;
-            p1 = new Point3d(view.P1);
-            switch (a)
+            List<Edge> perspective_lines = new List<Edge>();
+            foreach (var edge in lines)
             {
-                case Axis.AXIS_Y:
-                    p2 = new Point3d(p1.X, p1.Y + 10, p1.Z);
-                    break;
-                case Axis.AXIS_Z:
-                    p2 = new Point3d(p1.X, p1.Y, p1.Z + 10);
-                    break;
-                default:
-                    p2 = new Point3d(p1.X + 10, p1.Y, p1.Z);
-                    break;
+                Edge perspective_edge = new Edge(edge);
+                perspective_edge.Apply(Transformation.ProjectionTransform(Projection.PERSPECTIVE));
+                perspective_lines.Add(perspective_edge);
             }
-            rot_line = new Edge(p1, p2);
+                
+            g.DrawLine(Pens.Blue, perspective_lines[0].P1.toPointF(Projection.PERSPECTIVE), perspective_lines[0].P2.toPointF(Projection.PERSPECTIVE));
+            g.DrawLine(Pens.Red, perspective_lines[1].P1.toPointF(Projection.PERSPECTIVE), perspective_lines[1].P2.toPointF(Projection.PERSPECTIVE));
+            g.DrawLine(Pens.Green, perspective_lines[2].P1.toPointF(Projection.PERSPECTIVE), perspective_lines[2].P2.toPointF(Projection.PERSPECTIVE));
+        }
+        public void show(Graphics g, Pen pen = null)
+        {
+            show_lines(g);
+            camera_figure.show(g, Projection.PERSPECTIVE, pen);
         }
 
-        public void show(Graphics g, Projection pr = 0, int x = 0, int y = 0, int z = 0, Pen pen = null)
+        public void fiqureApply(Transformation t)
         {
-            pen = Pens.Red;
-
-            small_cube.Apply(Transformation.Translate(x, y, z));
-            small_cube.show(g, pr, pen);
-            small_cube.Apply(Transformation.Translate(- x, -y, -z));
+            camera_figure.Apply(t);
         }
 
-        public void translate(float x, float y, float z)
+        public void Apply(Transformation t)
         {
-            view.Apply(Transformation.Translate(x, y, z));
-            small_cube.Apply(Transformation.Translate(x, y, z));
-            rot_line.Apply(Transformation.Translate(x, y, z));
+            Transformation transformation = Transformation.Translate(-coords.X, -coords.Y, -coords.Z);
+            transformation *= t;
+            transformation *= Transformation.Translate(coords.X, coords.Y, coords.Z);
+            camera_figure.Apply(transformation);
+            foreach (var edge in lines)
+                edge.Apply(transformation);
         }
 
 
