@@ -23,9 +23,9 @@ namespace Lab6
         Color fill_color = Color.MediumVioletRed;
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
-        Graphics g;
+        Graphics g,g2;
         Projection pr = 0;
-        Polyhedron figure = null;
+        Polyhedron figure = null, figure_camera = null;
         Axis line_mode = 0;
 
         public Form1()
@@ -36,6 +36,11 @@ namespace Lab6
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+
+            g2 = pictureBox3.CreateGraphics();
+            g2.TranslateTransform(pictureBox3.ClientSize.Width / 2, pictureBox3.ClientSize.Height / 2);
+            g2.ScaleTransform(1, -1);
+
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
         }
@@ -43,8 +48,11 @@ namespace Lab6
         private void Button_cube_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g2.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_hexahedron();
+            figure_camera = new Polyhedron(figure);
+            figure_camera.show(g2, pr,null,true);
             figure.show(g, pr);
         }
 
@@ -153,32 +161,44 @@ namespace Lab6
         private void Button_ikosaeder_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g2.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_icosahedron();
+            figure_camera = new Polyhedron(figure);
+            figure_camera.show(g2, pr, null, true);
             figure.show(g, pr);
         }
 
         private void Button_dodecaeder_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g2.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_dodecahedron();
+            figure_camera = new Polyhedron(figure);
+            figure_camera.show(g2, pr, null, true);
             figure.show(g, pr);
         }
 
         private void Button_octaeder_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g2.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_octahedron();
+            figure_camera = new Polyhedron(figure);
+            figure_camera.show(g2, pr, null, true);
             figure.show(g, pr);
         }
 
         private void Button_tetraeder_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
+            g2.Clear(Color.White);
             figure = new Polyhedron();
             figure.make_tetrahedron();
+            figure_camera = new Polyhedron(figure);
+            figure_camera.show(g2, pr, null, true);
             figure.show(g, pr);
         }
 
@@ -270,8 +290,16 @@ namespace Lab6
             }
             
             g.Clear(Color.White);
+            g2.Clear(Color.White);
             figure.show(g, pr, new_fig);
          }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            g2.Clear(Color.White);
+            figure_camera = new Polyhedron(figure);
+            figure_camera.show(g2, pr, null, true);
+        }
 
         private void Button3_Click(object sender, EventArgs e)
         {
