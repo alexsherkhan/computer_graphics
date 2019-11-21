@@ -81,5 +81,26 @@ namespace Lab6.Primitives
                     return new PointF((float) (X / coords[3]), (float) (Y / coords[3]));
             }
         }
+
+        static public List<double> mul_matrix(List<double> matr1, int m1, int n1, List<double> matr2, int m2, int n2)
+        {
+            if (n1 != m2)
+                return new List<double>();
+            int l = m1;
+            int m = n1;
+            int n = n2;
+
+            List<double> c = new List<double>();
+            for (int i = 0; i < l * n; ++i)
+                c.Add(0f);
+
+            for (int i = 0; i < l; ++i)
+                for (int j = 0; j < n; ++j)
+                {
+                    for (int r = 0; r < m; ++r)
+                        c[i * l + j] += matr1[i * m1 + r] * matr2[r * n2 + j];
+                }
+            return c;
+        }
     }
 }

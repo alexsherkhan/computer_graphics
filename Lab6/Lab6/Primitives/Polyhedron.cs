@@ -148,13 +148,21 @@ namespace Lab6.Primitives
             Center.Z /= Faces.Count;
         }
 
-        public void show(Graphics g, Projection pr = 0, Pen pen = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null, bool normal = false, Edge camera = null)
         {
             var figure = new Polyhedron(this);
             figure.Apply(Transformation.ProjectionTransform(pr));
             foreach (Face f in figure.Faces)
-                //if (f.IsVisible)
-                f.show(g, pr, pen);
+            {
+                if(normal)
+                    if(camera == null)
+                        f.find_normal(this.Center);
+                    else
+                        f.find_normal(this.Center, camera);
+                if (f.IsVisible)
+                    f.show(g, pr, pen);
+            }
+              
         }
 
         public void Apply(Transformation t)
