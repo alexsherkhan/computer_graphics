@@ -559,6 +559,207 @@ namespace Lab6.Primitives
 
             find_center();
         }
+
+        private int[] Interpolate(int i0, int d0, int i1, int d1)
+        {
+            if (i0 == i1)
+            {
+                return new int[] { d0 };
+            }
+            int[] values = new int[i1 - i0 + 1];
+            float a = (float)(d1 - d0) / (i1 - i0);
+            float d = d0;
+            int ind = 0;
+            for (int i = i0; i <= i1; ++i)
+            {
+                values[ind] = (int)(d + 0.5);
+                d = d + a;
+                ++ind;
+            }
+            return values;
+        }
+
+        private void DrawFilledTriangle(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
+        {
+            PointF p0 = P0.toPointF(0);
+            PointF p1 = P1.toPointF(0);
+            PointF p2 = P2.toPointF(0);
+
+            // y0 <= y1 <= y2
+            int y0 = (int)p0.Y; int x0 = (int)p0.X; int z0 = (int)P0.Z;
+            int y1 = (int)p1.Y; int x1 = (int)p1.X; int z1 = (int)P1.Z;
+            int y2 = (int)p2.Y; int x2 = (int)p2.X; int z2 = (int)P2.Z;
+
+            var x01 = Interpolate(y0, x0, y1, x1);
+            var x12 = Interpolate(y1, x1, y2, x2);
+            var x02 = Interpolate(y0, x0, y2, x2);
+
+            var h01 = Interpolate(y0, z0, y1, z1);
+            var h12 = Interpolate(y1, z1, y2, z2);
+            var h02 = Interpolate(y0, z0, y2, z2);
+
+            // Конкатенация коротких сторон
+            int[] x012 = x01.Take(x01.Length - 1).Concat(x12).ToArray();
+            int[] h012 = h01.Take(h01.Length - 1).Concat(h12).ToArray();
+
+            // Определяем, какая из сторон левая и правая
+            int m = x012.Length / 2;
+            int[] x_left, x_right, h_left, h_right;
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+
+                h_left = h02;
+                h_right = h012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+
+
+                h_left = h012;
+                h_right = h02;
+            }
+
+            Face f = new Face(new List<Point3d>() { P0, P1, P2 });
+
+            // Отрисовка горизонтальных отрезков
+            for (int y = y0; y <= y2; ++y)
+            {
+                int x_l = x_left[y - y0];
+                int x_r = x_right[y - y0];
+                int[] h_segment;
+
+                // interpolation
+                if (x_l > x_r)
+                {
+                    continue;
+                    h_segment = Interpolate(x_r, h_left[y - y0], x_l, h_right[y - y0]); // костыль
+                }
+                else
+                    h_segment = Interpolate(x_l, h_left[y - y0], x_r, h_right[y - y0]);
+                for (int x = x_l; x <= x_r; ++x)
+                {
+                    int z = h_segment[x - x_l];
+                    // i, j, z - координаты в пространстве, в пикчербоксе x, y
+                    //int xx = (x + width / 2) % width;
+                    //int yy = (-y + height / 2) % height;
+                    int xx = x + width / 2;
+                    int yy = -y + height / 2;
+                    if (xx < 0 || xx > width || yy < 0 || yy > height || (xx * height + yy) < 0 || (xx * height + yy) > (buff.Length - 1))
+                        continue;
+                    if (z > buff[xx * height + yy])
+                    {
+                        buff[xx * height + yy] = (int)(z + 0.5);
+                        colors[xx * height + yy] = color;
+                    }
+                }
+            }
+        }
+
+        private void magic(Edge camera, Point3d P0, Point3d P1, Point3d P2, int[] buff, int width, int height, int[] colors, int color)
+        {
+            // сортируем p0, p1, p2: y0 <= y1 <= y2
+            PointF p0 = P0.toPointF(0);
+            PointF p1 = P1.toPointF(0);
+            PointF p2 = P2.toPointF(0);
+
+            if (p1.Y < p0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P1.X; P0.Y = P1.Y; P0.Z = P1.Z;
+                P1.X = tmpp.X; P1.Y = tmpp.Y; P1.Z = tmpp.Z;
+                PointF tmppp = new PointF(p0.X, p0.Y);
+                p0.X = p1.X; p0.Y = p1.Y;
+                p1.X = tmppp.X; p1.Y = tmppp.Y;
+            }
+            if (p2.Y < p0.Y)
+            {
+                Point3d tmpp = new Point3d(P0);
+                P0.X = P2.X; P0.Y = P2.Y; P0.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+                PointF tmppp = new PointF(p0.X, p0.Y);
+                p0.X = p2.X; p0.Y = p2.Y;
+                p2.X = tmppp.X; p2.Y = tmppp.Y;
+            }
+            if (p2.Y < p1.Y)
+            {
+                Point3d tmpp = new Point3d(P1);
+                P1.X = P2.X; P1.Y = P2.Y; P1.Z = P2.Z;
+                P2.X = tmpp.X; P2.Y = tmpp.Y; P2.Z = tmpp.Z;
+                PointF tmppp = new PointF(p1.X, p1.Y);
+                p1.X = p2.X; p1.Y = p2.Y;
+                p2.X = tmppp.X; p2.Y = tmppp.Y;
+            }
+
+            DrawFilledTriangle(camera, P0, P1, P2, buff, width, height, colors, color);
+        }
+
+
+        public void calc_z_buff(Edge camera, int width, int height, out int[] buf, out int[] colors)
+        {
+            buf = new int[width * height];
+            for (int i = 0; i < width * height; ++i)
+                buf[i] = int.MinValue;
+            colors = new int[width * height];
+            for (int i = 0; i < width * height; ++i)
+                colors[i] = 255;
+
+            Random r = new Random();
+            int color = 0;
+            foreach (var f in Faces)
+            {
+
+                color = (color + 30) % 255;
+                // треугольник
+                Point3d P0 = new Point3d(f.Points[0]);
+                Point3d P1 = new Point3d(f.Points[1]);
+                Point3d P2 = new Point3d(f.Points[2]);
+                magic(camera, P0, P1, P2, buf, width, height, colors, color);
+                // 4
+                if (f.Points.Count > 3)
+                {
+                    P0 = new Point3d(f.Points[2]);
+                    P1 = new Point3d(f.Points[3]);
+                    P2 = new Point3d(f.Points[0]);
+                    magic(camera, P0, P1, P2, buf, width, height, colors, color);
+                }
+                // 5  убейте додекаэдр,пожалуйста
+                if (f.Points.Count > 4)
+                {
+                    P0 = new Point3d(f.Points[3]);
+                    P1 = new Point3d(f.Points[4]);
+                    P2 = new Point3d(f.Points[0]);
+                    magic(camera, P0, P1, P2, buf, width, height, colors, color);
+                }
+            }
+
+            int min_v = int.MaxValue;
+            int max_v = 0;
+            for (int i = 0; i < width * height; ++i)
+            {
+                if (buf[i] != int.MinValue && buf[i] < min_v)
+                    min_v = buf[i];
+                if (buf[i] > max_v)
+                    max_v = buf[i];
+            }
+            if (min_v < 0)
+            {
+                min_v = -min_v;
+                max_v += min_v;
+                for (int i = 0; i < width * height; ++i)
+                    if (buf[i] != int.MinValue)
+                        buf[i] = (buf[i] + min_v) % int.MaxValue;
+            }
+            for (int i = 0; i < width * height; ++i)
+                if (buf[i] == int.MinValue)
+                    buf[i] = 255;
+                else if (max_v != 0) buf[i] = buf[i] * 225 / max_v;
+
+        }
+
     }
 
     public sealed class Point3dComparer : IEqualityComparer<Point3d>

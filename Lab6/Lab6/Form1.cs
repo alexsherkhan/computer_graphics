@@ -37,6 +37,7 @@ namespace Lab6
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+            pictureBox3.Image = new Bitmap(pictureBox3.Width, pictureBox3.Height);
             camera_g = pictureBox3.CreateGraphics();
             camera_g.TranslateTransform(pictureBox3.ClientSize.Width / 2, pictureBox3.ClientSize.Height / 2);
             camera_g.ScaleTransform(1, -1);
@@ -385,6 +386,39 @@ namespace Lab6
                                 );
             camera_g.Clear(Color.White);
             camera.show(camera_g);
+        }
+
+        private void show_z_buff()
+        {
+            int[] buff = new int[pictureBox3.Width * pictureBox3.Height];
+            int[] colors = new int[pictureBox3.Width * pictureBox3.Height];
+
+            figure.calc_z_buff(new Edge(new Point3d (0, 0, 100), new Point3d(0, 0, 250)), pictureBox3.Width, pictureBox3.Height, out buff, out colors);
+            Bitmap bmp = pictureBox3.Image as Bitmap;
+
+
+            for (int i = 0; i < pictureBox3.Width; ++i)
+                for (int j = 0; j < pictureBox3.Height; ++j)
+                {
+                    Color c = Color.FromArgb(buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j], buff[i * pictureBox3.Height + j]);
+                    bmp.SetPixel(i, j, c);
+                }
+
+            pictureBox3.Refresh();
+        }
+
+    
+        private void radioButton2_Checked(object sender, EventArgs e)
+        {
+            if (figure != null)
+            {
+                if (radioButton2.Checked)
+                {
+                    show_z_buff();
+                }
+            }
+
+
         }
 
         private void camera_y_Click(object sender, EventArgs e)
