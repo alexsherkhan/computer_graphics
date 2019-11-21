@@ -131,7 +131,6 @@ namespace Lab6.Primitives
             return res;
         }
 
-
         private void find_center()
         {
             Center.X = 0;
@@ -162,8 +161,9 @@ namespace Lab6.Primitives
                 if (f.IsVisible)
                     f.show(g, pr, pen);
             }
-              
+
         }
+
 
         public void Apply(Transformation t)
         {
@@ -520,8 +520,8 @@ namespace Lab6.Primitives
                     new Point3d(pts[i]),
                     new Point3d(pts[val]),
                     new Point3d(pts[val * 2 + 1]),
-                    new Point3d(pts[val * 2 - 2]),
-                    new Point3d(pts[val * 2 - 1])
+                    new Point3d(pts[i * 2]),
+                    new Point3d(pts[i * 2 + 1])
                 }));
             }
 

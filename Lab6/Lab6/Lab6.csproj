@@ -57,6 +57,7 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Primitives\Camera.cs" />
     <Compile Include="Primitives\Edge.cs" />
     <Compile Include="Primitives\Face.cs" />
     <Compile Include="Primitives\Point3d.cs" />
