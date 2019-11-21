@@ -41,10 +41,6 @@ namespace Lab6
             camera_g.TranslateTransform(pictureBox3.ClientSize.Width / 2, pictureBox3.ClientSize.Height / 2);
             camera_g.ScaleTransform(1, -1);
 
-            g2 = pictureBox3.CreateGraphics();
-            g2.TranslateTransform(pictureBox3.ClientSize.Width / 2, pictureBox3.ClientSize.Height / 2);
-            g2.ScaleTransform(1, -1);
-
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
         }
@@ -301,7 +297,7 @@ namespace Lab6
             }
             
             g.Clear(Color.White);
-            g2.Clear(Color.White);
+            camera_g.Clear(Color.White);
             figure.show(g, pr, new_fig);
          }
 
@@ -316,9 +312,10 @@ namespace Lab6
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            g2.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr, null, true);
+            camera_g.Clear(Color.White);
+            Polyhedron figure_camera = new Polyhedron(figure);
+            camera = new Camera(figure_camera);
+            camera.show(camera_g, null, true);
         }
 
         private void Button3_Click(object sender, EventArgs e)
@@ -387,7 +384,6 @@ namespace Lab6
         }
 
         private void camera_y_Click(object sender, EventArgs e)
-        {
-                    }
+        {}
     }
 }

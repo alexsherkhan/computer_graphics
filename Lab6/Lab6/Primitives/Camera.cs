@@ -36,10 +36,10 @@ namespace Lab6.Primitives
             g.DrawLine(Pens.Red, perspective_lines[1].P1.toPointF(Projection.PERSPECTIVE), perspective_lines[1].P2.toPointF(Projection.PERSPECTIVE));
             g.DrawLine(Pens.Green, perspective_lines[2].P1.toPointF(Projection.PERSPECTIVE), perspective_lines[2].P2.toPointF(Projection.PERSPECTIVE));
         }
-        public void show(Graphics g, Pen pen = null)
+        public void show(Graphics g, Pen pen = null, bool normal = false)
         {
             show_lines(g);
-            camera_figure.show(g, Projection.PERSPECTIVE, pen);
+            camera_figure.show(g, Projection.PERSPECTIVE, pen, normal);
         }
 
         public void fiqureApply(Transformation t)

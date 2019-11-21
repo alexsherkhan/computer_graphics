@@ -603,33 +603,6 @@
             this.label5.TabIndex = 86;
             this.label5.Text = "Camera";
             // 
-            // camera_z
-            // 
-            this.camera_z.AutoSize = true;
-            this.camera_z.Location = new System.Drawing.Point(1311, 679);
-            this.camera_z.Name = "camera_z";
-            this.camera_z.Size = new System.Drawing.Size(32, 17);
-            this.camera_z.TabIndex = 89;
-            this.camera_z.Text = "500";
-            // 
-            // camera_y
-            // 
-            this.camera_y.AutoSize = true;
-            this.camera_y.Location = new System.Drawing.Point(1273, 679);
-            this.camera_y.Name = "camera_y";
-            this.camera_y.Size = new System.Drawing.Size(16, 17);
-            this.camera_y.TabIndex = 88;
-            this.camera_y.Text = "0";
-            // 
-            // camera_x
-            // 
-            this.camera_x.AutoSize = true;
-            this.camera_x.Location = new System.Drawing.Point(1235, 679);
-            this.camera_x.Name = "camera_x";
-            this.camera_x.Size = new System.Drawing.Size(16, 17);
-            this.camera_x.TabIndex = 87;
-            this.camera_x.Text = "0";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
