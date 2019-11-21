@@ -19,6 +19,9 @@ namespace Lab6.Primitives
             P2 = new Point3d(pt2);
         }
 
+        public Edge(Edge edge) : this(edge.P1, edge.P2) { }
+
+
         public Edge(string s)
         {
             var arr = s.Split(' ');

@@ -114,6 +114,11 @@ namespace Lab6.Primitives
             return Scale(1, 1, -1);
         }
 
+       /* public static Transformation cameraTransformation()
+        {
+            
+        }*/
+
         public static Transformation ProjectionTransform(Projection pr)
         {
             switch (pr)
@@ -161,7 +166,7 @@ namespace Lab6.Primitives
                         new double[,] {
                     { 1, 0, 0, 0 },
                     { 0, 1, 0, 0 },
-                    { 0, 0, 0, -1/1000f },
+                    { 0, 0, 0, -1/500f },
                     { 0, 0, 0, 1 }
                         });
             }

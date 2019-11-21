@@ -23,10 +23,11 @@ namespace Lab6
         Color fill_color = Color.MediumVioletRed;
         Pen new_fig = Pens.Black;
         Pen old_fig = Pens.LightGray;
-        Graphics g,g2;
+        Graphics g, camera_g;
         Projection pr = 0;
-        Polyhedron figure = null, figure_camera = null;
+        Polyhedron figure = null;
         Axis line_mode = 0;
+        Camera camera = null;
 
         public Form1()
         {
@@ -36,10 +37,9 @@ namespace Lab6
             g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
-
-            g2 = pictureBox3.CreateGraphics();
-            g2.TranslateTransform(pictureBox3.ClientSize.Width / 2, pictureBox3.ClientSize.Height / 2);
-            g2.ScaleTransform(1, -1);
+            camera_g = pictureBox3.CreateGraphics();
+            camera_g.TranslateTransform(pictureBox3.ClientSize.Width / 2, pictureBox3.ClientSize.Height / 2);
+            camera_g.ScaleTransform(1, -1);
 
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
@@ -47,13 +47,7 @@ namespace Lab6
 
         private void Button_cube_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
-            g2.Clear(Color.White);
-            figure = new Polyhedron();
-            figure.make_hexahedron();
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr,null,true);
-            figure.show(g, pr);
+            createFigure(0);
         }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -73,9 +67,9 @@ namespace Lab6
             else
             {
                 double old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
-                figure.Apply(Transformation.Translate(-old_x, -old_y, -old_z));
-                figure.Apply(Transformation.Translate(Double.Parse(trans_x.Text), Double.Parse(trans_y.Text), Double.Parse(trans_z.Text)));
-                figure.Apply(Transformation.Scale(Double.Parse(scaling_x.Text), Double.Parse(scaling_y.Text), Double.Parse(scaling_z.Text)));
+                Transformation transformation = Transformation.Translate(-old_x, -old_y, -old_z);
+                transformation *= Transformation.Translate(Double.Parse(trans_x.Text), Double.Parse(trans_y.Text), Double.Parse(trans_z.Text));
+                transformation *= Transformation.Scale(Double.Parse(scaling_x.Text), Double.Parse(scaling_y.Text), Double.Parse(scaling_z.Text));
                 double rotX = Double.Parse(angle_x.Text) / 180 * Math.PI;
                 double rotY = Double.Parse(angle_y.Text) /  180 * Math.PI;
                 double rotZ = Double.Parse(angle_z.Text) / 180 * Math.PI;
@@ -96,24 +90,25 @@ namespace Lab6
                             Ay = (rot_line.P1.Y + rot_line.P2.Y) / 2, 
                             Az = (rot_line.P1.Z + rot_line.P2.Z) / 2;
 
-                        figure.Apply(Transformation.Translate(-Ax, -Ay, Az) 
+                        transformation *= Transformation.Translate(-Ax, -Ay, Az)
                                    * Transformation.RotateX(rotX)
                                    * Transformation.RotateY(rotY)
                                    * Transformation.RotateZ(rotZ)
-                                   * Transformation.Translate(Ax, Ay, Az)
-                                   );
+                                   * Transformation.Translate(Ax, Ay, Az);
                         break;
                     default:
-                        figure.Apply(Transformation.RotateX(rotX)
+                        transformation *= Transformation.RotateX(rotX)
                                     * Transformation.RotateY(rotY)
-                                    * Transformation.RotateZ(rotZ)
-                                    );
+                                    * Transformation.RotateZ(rotZ);
                         break;
                            
                 }
-                figure.Apply(Transformation.Translate(old_x, old_y, old_z));
-                g.Clear(Color.White);
+                transformation *= Transformation.Translate(old_x, old_y, old_z);
+                figure.Apply(transformation);
+                camera.fiqureApply(transformation);
+                clearScenes();
                 figure.show(g, pr, new_fig);
+                camera.show(camera_g, old_fig);
             }
         }
 
@@ -160,46 +155,66 @@ namespace Lab6
         }
         private void Button_ikosaeder_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
-            g2.Clear(Color.White);
+            createFigure(4);
+        }
+
+        private void createFigure(int figureType)
+        {
+            clearScenes();
             figure = new Polyhedron();
-            figure.make_icosahedron();
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr, null, true);
+            switch (figureType)
+            {
+                case 0:
+                    figure.make_hexahedron();
+                    break;
+                case 1:
+                    figure.make_tetrahedron();
+                    break;
+                case 2:
+                    figure.make_octahedron();
+                    break;
+                case 3:
+                    figure.make_dodecahedron();
+                    break;
+                case 4:
+                    figure.make_icosahedron();
+                    break;
+            }
+            camera= new Camera(new Polyhedron(figure));
+            camera.Apply(Transformation.Identity());
             figure.show(g, pr);
+            camera.show(camera_g, old_fig);
+        }
+
+        private void createFigureFromFile(string fileText, int mode = 0)
+        {
+            clearScenes();
+            figure = new Polyhedron(fileText, mode);
+            camera = new Camera(new Polyhedron(figure));
+            camera.Apply(Transformation.Identity());
+            figure.show(g, pr);
+            camera.show(camera_g, old_fig);
         }
 
         private void Button_dodecaeder_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
-            g2.Clear(Color.White);
-            figure = new Polyhedron();
-            figure.make_dodecahedron();
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr, null, true);
-            figure.show(g, pr);
+            createFigure(3);
         }
 
         private void Button_octaeder_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
-            g2.Clear(Color.White);
-            figure = new Polyhedron();
-            figure.make_octahedron();
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr, null, true);
-            figure.show(g, pr);
+            createFigure(2);
         }
 
         private void Button_tetraeder_Click(object sender, EventArgs e)
         {
+            createFigure(1);
+        }
+
+        private void clearScenes()
+        {
             g.Clear(Color.White);
-            g2.Clear(Color.White);
-            figure = new Polyhedron();
-            figure.make_tetrahedron();
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr, null, true);
-            figure.show(g, pr);
+            camera_g.Clear(Color.White);
         }
 
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -238,11 +253,7 @@ namespace Lab6
             string filename = openFileDialog1.FileName;
             string fileText = System.IO.File.ReadAllText(filename);
 
-            figure = new Polyhedron(fileText);
-            g.Clear(Color.White);
-            figure.show(g, pr);
-     
-            label10.Text = Math.Round(figure.Center.X).ToString() + ", " + Math.Round(figure.Center.Y).ToString() + ", " + Math.Round(figure.Center.Z).ToString();
+            createFigureFromFile(fileText);
         }
 
         // save_file_dialog
@@ -266,12 +277,8 @@ namespace Lab6
             string filename = openFileDialog1.FileName;
             string fileText = System.IO.File.ReadAllText(filename);
 
-            figure = new Polyhedron(fileText, Polyhedron.MODE_ROT);
-            g.Clear(Color.White);
-            figure.show(g, pr);
-         
+            createFigureFromFile(fileText, Polyhedron.MODE_ROT);
 
-           // label10.Text = figure.Center.X.ToString() + ", " + figure.Center.Y.ToString() + ", " + figure.Center.Z.ToString();
         }
 
         private void clear_button_Click(object sender, EventArgs e)
@@ -290,15 +297,25 @@ namespace Lab6
             }
             
             g.Clear(Color.White);
-            g2.Clear(Color.White);
+            camera_g.Clear(Color.White);
             figure.show(g, pr, new_fig);
          }
 
+        private void Camera_translation_Click(object sender, EventArgs e)
+        {
+            camera.Apply(Transformation.Translate(-Double.Parse(trans_x_camera.Text),
+                -Double.Parse(trans_y_camera.Text),
+                -Double.Parse(trans_z_camera.Text)));
+            camera_g.Clear(Color.White);
+            camera.show(camera_g, old_fig);
+        }
+
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            g2.Clear(Color.White);
-            figure_camera = new Polyhedron(figure);
-            figure_camera.show(g2, pr, null, true);
+            camera_g.Clear(Color.White);
+            Polyhedron figure_camera = new Polyhedron(figure);
+            camera = new Camera(figure_camera);
+            camera.show(camera_g, null, true);
         }
 
         private void Button3_Click(object sender, EventArgs e)
@@ -350,8 +367,23 @@ namespace Lab6
             figure.show(g, pr, new_fig);
         }
 
-        private void camera_y_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
-                    }
+            double old_x = figure.Center.X, old_y = figure.Center.Y, old_z = figure.Center.Z;
+            camera.Apply(Transformation.Translate(-old_x, -old_y, -old_z));
+            double rotX = -Double.Parse(camera_x_rotate.Text) / 180 * Math.PI;
+            double rotY = -Double.Parse(camera_y_rotate.Text) / 180 * Math.PI;
+            double rotZ = -Double.Parse(camera_z_rotate.Text) / 180 * Math.PI;
+            camera.Apply(Transformation.RotateX(rotX)
+                                * Transformation.RotateY(rotY)
+                                * Transformation.RotateZ(rotZ)
+                                );
+            camera.Apply(Transformation.Translate(old_x, old_y, old_z));
+            camera_g.Clear(Color.White);
+            camera.show(camera_g);
+        }
+
+        private void camera_y_Click(object sender, EventArgs e)
+        {}
     }
 }
