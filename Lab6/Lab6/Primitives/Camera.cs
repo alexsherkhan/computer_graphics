@@ -43,7 +43,7 @@ namespace Lab6.Primitives
             switch (mode)
             {
                 case CameraMode.Simple:
-                    show_lines(g);
+                    //show_lines(g);
                     camera_figure.show(g, Projection.PERSPECTIVE, pen);
                     break;
                 case CameraMode.Clipping:
@@ -62,9 +62,10 @@ namespace Lab6.Primitives
 
         public void Apply(Transformation t)
         {
-            Transformation transformation = Transformation.Translate(-coords.X, -coords.Y, -coords.Z);
+            double old_x = camera_figure.Center.X, old_y = camera_figure.Center.Y, old_z = camera_figure.Center.Z;
+            Transformation transformation = Transformation.Translate(-old_x, -old_y, -old_z);
             transformation *= t;
-            transformation *= Transformation.Translate(coords.X, coords.Y, coords.Z);
+            transformation *= Transformation.Translate(old_x, old_y, old_z);
             camera_figure.Apply(transformation);
             foreach (var edge in lines)
                 edge.Apply(transformation);
