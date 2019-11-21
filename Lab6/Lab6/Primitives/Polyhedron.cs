@@ -147,7 +147,7 @@ namespace Lab6.Primitives
             Center.Z /= Faces.Count;
         }
 
-        public void show(Graphics g, Projection pr = 0, Pen pen = null, bool normal = false, Edge camera = null)
+        public void show(Graphics g, Projection pr = 0, Pen pen = null, bool normal = false, Point3d camera = null)
         {
             var figure = new Polyhedron(this);
             figure.Apply(Transformation.ProjectionTransform(pr));

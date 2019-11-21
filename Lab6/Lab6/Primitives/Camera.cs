@@ -17,6 +17,8 @@ namespace Lab6.Primitives
         new Edge(new Point3d(0, 0, 0), new Point3d(0, 0, 100))
         };
 
+        public CameraMode mode = CameraMode.Simple;
+
         public Camera(Polyhedron polyhedron)
         {
             camera_figure = polyhedron;
@@ -38,8 +40,19 @@ namespace Lab6.Primitives
         }
         public void show(Graphics g, Pen pen = null, bool normal = false)
         {
-            show_lines(g);
-            camera_figure.show(g, Projection.PERSPECTIVE, pen, normal);
+            switch (mode)
+            {
+                case CameraMode.Simple:
+                    show_lines(g);
+                    camera_figure.show(g, Projection.PERSPECTIVE, pen);
+                    break;
+                case CameraMode.Clipping:
+                    camera_figure.show(g, Projection.PERSPECTIVE, pen, true, coords);
+                    break;
+                case CameraMode.Buffer:
+                    break;
+            }
+
         }
 
         public void fiqureApply(Transformation t)
@@ -57,6 +70,9 @@ namespace Lab6.Primitives
                 edge.Apply(transformation);
         }
 
-
+        internal void setMode(CameraMode mode)
+        {
+            this.mode = mode;
+        }
     }
 }

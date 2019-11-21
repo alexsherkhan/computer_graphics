@@ -14,7 +14,7 @@ namespace Lab6
 {
     public enum Axis { AXIS_X, AXIS_Y, AXIS_Z, OTHER };
     public enum Projection { PERSPECTIVE = 0, ISOMETRIC, ORTHOGR_X, ORTHOGR_Y, ORTHOGR_Z };
-
+    public enum CameraMode { Simple, Clipping, Buffer}
     public enum Reflect { X, Y, Z};
     public delegate float Function(float x, float y);
 
@@ -180,7 +180,9 @@ namespace Lab6
                     figure.make_icosahedron();
                     break;
             }
+            CameraMode oldMode = camera == null ? CameraMode.Simple : camera.mode;
             camera= new Camera(new Polyhedron(figure));
+            camera.setMode(oldMode);
             camera.Apply(Transformation.Identity());
             figure.show(g, pr);
             camera.show(camera_g, old_fig);
@@ -190,7 +192,9 @@ namespace Lab6
         {
             clearScenes();
             figure = new Polyhedron(fileText, mode);
+            CameraMode oldMode = camera == null ? CameraMode.Simple : camera.mode;
             camera = new Camera(new Polyhedron(figure));
+            camera.setMode(oldMode);
             camera.Apply(Transformation.Identity());
             figure.show(g, pr);
             camera.show(camera_g, old_fig);
@@ -313,8 +317,10 @@ namespace Lab6
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             camera_g.Clear(Color.White);
-            Polyhedron figure_camera = new Polyhedron(figure);
-            camera = new Camera(figure_camera);
+            if (radioButton1.Checked)
+            {
+                camera.setMode(CameraMode.Clipping);
+            }
             camera.show(camera_g, null, true);
         }
 

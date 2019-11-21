@@ -94,7 +94,7 @@ namespace Lab6.Primitives
 
              }
 
-            public void find_normal(Point3d p_center, Edge camera = null)
+            public void find_normal(Point3d p_center, Point3d camera = null)
             {
                 Point3d Q = Points[1], R = Points[2], S = Points[0];
                 List<double> QR = new List<double> { R.X - Q.X, R.Y - Q.Y, R.Z - Q.Z };
@@ -115,8 +115,7 @@ namespace Lab6.Primitives
 
                 Point3d E = new Point3d(100, 100, 100);
 
-                if (camera != null)
-                    E = camera.P1;
+                E = camera;
                 
 
                 List<double> CE = new List<double> { E.X - Center.X, E.Y - Center.Y, E.Z - Center.Z };
