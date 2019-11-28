@@ -20,12 +20,22 @@ namespace Lab6.Primitives
 
         private PictureBox pictureBox;
 
+        private TextBox light_x;
+        private TextBox light_y;
+        private TextBox light_z;
+        public Color fill_color;
+        
+
         public CameraMode mode = CameraMode.Simple;
 
-        public Camera(Polyhedron polyhedron, PictureBox pictureBox)
+        public Camera(Polyhedron polyhedron, PictureBox pictureBox, Color fill_color, TextBox light_x = null, TextBox light_y = null, TextBox light_z = null)
         {
             camera_figure = polyhedron;
             this.pictureBox = pictureBox;
+            this.light_x = light_x;
+            this.light_y = light_y;
+            this.light_z = light_z;
+            this.fill_color = fill_color;
         }
 
         private void show_lines(Graphics g)
@@ -56,6 +66,9 @@ namespace Lab6.Primitives
                 case CameraMode.Buffer:
                     show_z_buff();
                     break;
+                case CameraMode.Guro:
+                    show_gouraud();
+                    break;
             }
 
         }
@@ -78,6 +91,33 @@ namespace Lab6.Primitives
                 for (int j = 0; j < pictureBox.Height; ++j)
                 {
                     Color c = Color.FromArgb(buff[i * pictureBox.Height + j], buff[i * pictureBox.Height + j], buff[i * pictureBox.Height + j]);
+                    bmp.SetPixel(i, j, c);
+                }
+
+            pictureBox.Refresh();
+        }
+
+        private void show_gouraud()
+        {
+            float[] intensive = new float[pictureBox.Width * pictureBox.Height];
+
+            camera_figure.calc_gouraud(coords, pictureBox.Width, pictureBox.Height, out intensive, new Point3d(int.Parse(light_x.Text), int.Parse(light_y.Text), int.Parse(light_z.Text)));
+            Bitmap bmp = pictureBox.Image as Bitmap;
+       
+
+            for (int i = 0; i < pictureBox.Width; ++i)
+                for (int j = 0; j < pictureBox.Height; ++j)
+                {
+                    Color c;
+                    if (intensive[i * pictureBox.Height + j] < 1E-6f)
+                        c = Color.Black;
+                    else
+                    {
+                        float intsv = intensive[i * pictureBox.Height + j];
+                        if (intsv > 1)
+                            intsv = 1;
+                        c = Color.FromArgb((int)(fill_color.R * intsv) % 256, (int)(fill_color.G * intsv) % 256, (int)(fill_color.B * intsv) % 256);
+                    }
                     bmp.SetPixel(i, j, c);
                 }
 

@@ -14,7 +14,7 @@ namespace Lab6
 {
     public enum Axis { AXIS_X, AXIS_Y, AXIS_Z, OTHER };
     public enum Projection { PERSPECTIVE = 0, ISOMETRIC, ORTHOGR_X, ORTHOGR_Y, ORTHOGR_Z };
-    public enum CameraMode { Simple, Clipping, Buffer}
+    public enum CameraMode { Simple, Clipping, Buffer, Guro}
     public enum Reflect { X, Y, Z};
     public delegate float Function(float x, float y);
 
@@ -44,6 +44,10 @@ namespace Lab6
 
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
+
+            colorDialog1.FullOpen = true;
+            colorDialog1.Color = fill_color;
+            label_color.BackColor = fill_color;
         }
 
         private void Button_cube_Click(object sender, EventArgs e)
@@ -182,7 +186,7 @@ namespace Lab6
                     break;
             }
             CameraMode oldMode = camera == null ? CameraMode.Simple : camera.mode;
-            camera= new Camera(new Polyhedron(figure), pictureBox3);
+            camera= new Camera(new Polyhedron(figure), pictureBox3,fill_color, light_x, light_y, light_z);
             camera.setMode(oldMode);
             camera.Apply(Transformation.Identity());
             figure.show(g, pr);
@@ -194,7 +198,7 @@ namespace Lab6
             clearScenes();
             figure = new Polyhedron(fileText, mode);
             CameraMode oldMode = camera == null ? CameraMode.Simple : camera.mode;
-            camera = new Camera(new Polyhedron(figure), pictureBox3);
+            camera = new Camera(new Polyhedron(figure), pictureBox3, fill_color, light_x, light_y, light_z);
             camera.setMode(oldMode);
             camera.Apply(Transformation.Identity());
             figure.show(g, pr);
@@ -402,6 +406,42 @@ namespace Lab6
             camera.show(camera_g);
 
 
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (figure != null)
+            {
+                if (radioButton3.Checked)
+                {
+                    camera.setMode(CameraMode.Guro);
+                 
+                }
+            }
+            camera.show(camera_g);
+        }
+
+        private void label_color_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            fill_color = colorDialog1.Color;
+            label_color.BackColor = fill_color;
+            if (fill_color.ToArgb() == Color.Black.ToArgb())
+                label_color.ForeColor = Color.White;
+            else label_color.ForeColor = Color.Black;
+            if (radioButton3.Checked)
+            {
+                camera.setMode(CameraMode.Guro);
+            }
+            camera.fill_color = fill_color;
+            camera.show(camera_g);
+
+        }
+
+        private void button_exec_camera_Click(object sender, EventArgs e)
+        {
+            camera.show(camera_g);
         }
 
         private void camera_y_Click(object sender, EventArgs e)
