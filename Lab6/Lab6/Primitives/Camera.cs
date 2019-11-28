@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,14 @@ namespace Lab6.Primitives
         private TextBox light_y;
         private TextBox light_z;
         public Color fill_color;
-        
+
+        public Bitmap bmp, texture;
+        public BitmapData bmpData, bmpDataTexture; // for picturebox and texture
+        public byte[] rgbValues, rgbValuesTexture; // for picturebox and texture
+        public IntPtr ptr; // pointer to the rgbValues
+        public int bytes; // length of rgbValues
+
+        public PictureBox picture;
 
         public CameraMode mode = CameraMode.Simple;
 
@@ -68,6 +76,9 @@ namespace Lab6.Primitives
                     break;
                 case CameraMode.Guro:
                     show_gouraud();
+                    break;
+                case CameraMode.Texture:
+                    show_texture();
                     break;
             }
 
@@ -122,6 +133,46 @@ namespace Lab6.Primitives
                 }
 
             pictureBox.Refresh();
+        }
+
+        private byte[] getRGBValues(out Bitmap bmp, out BitmapData bmpData,
+            out IntPtr ptr, out int bytes)
+        {
+            bmp = new Bitmap(picture.ClientSize.Width, picture.ClientSize.Height, PixelFormat.Format24bppRgb);
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            bmpData =
+                bmp.LockBits(rect, ImageLockMode.ReadWrite,
+                bmp.PixelFormat);
+
+            // Get the address of the first line.
+            ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+            byte[] rgb_values = new byte[bytes];
+
+            // Create rgb array with background color
+            for (int i = 0; i < bytes - 3; i += 3)
+            {
+                rgb_values[i] = picture.BackColor.R;
+                rgb_values[i + 1] = picture.BackColor.G;
+                rgb_values[i + 2] = picture.BackColor.B;
+            }
+
+            return rgb_values;
+        }
+
+        private void show_texture()
+        {
+            if (bmp != null)
+                bmp.Dispose();
+            rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+            camera_figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(bmpData);
+            picture.Image = bmp;
         }
 
         public void Apply(Transformation t)

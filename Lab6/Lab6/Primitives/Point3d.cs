@@ -17,7 +17,7 @@ namespace Lab6.Primitives
         public double X { get { return coords[0]; } set { coords[0] = value; } }
         public double Y { get { return coords[1]; } set { coords[1] = value; } }
         public double Z { get { return coords[2]; } set { coords[2] = value; } }
-
+        public PointF TextureCoordinates { get; set; } = new PointF();
         public Point3d(double x, double y, double z)
         {
             X = x;
