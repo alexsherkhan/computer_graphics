@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using static Lab6.Primitives.Face_Affines;
 
@@ -995,9 +996,185 @@ namespace Lab6.Primitives
            // int max = 0;
         }
 
-    }
 
-    public sealed class Point3dComparer : IEqualityComparer<Point3d>
+        /// <summary>
+        /// Linear interpolation from i0 to i1
+        /// </summary>
+        /// <param name="i0">First independent variable</param>
+        /// <param name="d0">First dependent variable</param>
+        /// <param name="i1">Last independent variable</param>
+        /// <param name="d1">Last dependent variable</param>
+        private static double[] Interpolate(int i0, double d0, int i1, double d1)
+        {
+            if (i0 == i1)
+                return new double[] { d0 };
+            double[] values = new double[i1 - i0 + 1];
+            double a = (d1 - d0) / (i1 - i0);
+            double d = d0;
+
+            int ind = 0;
+            for (int i = i0; i <= i1; ++i)
+            {
+                values[ind++] = d;
+                d += a;
+            }
+
+            return values;
+        }
+
+
+        /// <summary>
+        /// Сортировка вершин треугольника по Y от min до max
+        /// </summary>
+        private static Point3d[] SortTriangleVertices(Point3d P0, Point3d P1, Point3d P2)
+        {
+            Point3d p0 = new Point3d(P0)
+            {
+
+                X = P0.toPointF(Projection.PERSPECTIVE).X,
+                Y = P0.toPointF(Projection.PERSPECTIVE).Y
+            },
+            p1 = new Point3d(P1)
+            {
+                X = P1.toPointF(Projection.PERSPECTIVE).X,
+                Y = P1.toPointF(Projection.PERSPECTIVE).Y
+            },
+            p2 = new Point3d(P2)
+            {
+                X = P2.toPointF(Projection.PERSPECTIVE).X,
+                Y = P2.toPointF(Projection.PERSPECTIVE).Y
+            };
+            Point3d[] points = new Point3d[3] { p0, p1, p2 };
+
+            if (points[1].Y < points[0].Y)
+            {
+                points[0] = p1;
+                points[1] = p0;
+            }
+            if (points[2].Y < points[0].Y)
+            {
+                points[2] = points[0];
+                points[0] = p2;
+            }
+            if (points[2].Y < points[1].Y)
+            {
+                Point3d temp = points[1];
+                points[1] = points[2];
+                points[2] = temp;
+            }
+
+            return points;
+        }
+
+        private static void DrawTexture(Point3d P0, Point3d P1, Point3d P2, Bitmap bmp, BitmapData bmpData, byte[] rgbValues, Bitmap texture, BitmapData bmpDataTexture, byte[] rgbValuesTexture)
+        {
+            // Отсортируйте точки так, чтобы y0 <= y1 <= y2
+            var points = SortTriangleVertices(P0, P1, P2);
+            Point3d SortedP0 = points[0], SortedP1 = points[1], SortedP2 = points[2];
+
+            // Вычислите координаты x и U, V текстурных координат ребер треугольника
+            var x01 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP1.Y, SortedP1.X);
+            var u01 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP1.Y, SortedP1.TextureCoordinates.X);
+            var v01 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP1.Y, SortedP1.TextureCoordinates.Y);
+            var x12 = Interpolate((int)SortedP1.Y, SortedP1.X, (int)SortedP2.Y, SortedP2.X);
+            var u12 = Interpolate((int)SortedP1.Y, SortedP1.TextureCoordinates.X, (int)SortedP2.Y, SortedP2.TextureCoordinates.X);
+            var v12 = Interpolate((int)SortedP1.Y, SortedP1.TextureCoordinates.Y, (int)SortedP2.Y, SortedP2.TextureCoordinates.Y);
+            var x02 = Interpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP2.Y, SortedP2.X);
+            var u02 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP2.Y, SortedP2.TextureCoordinates.X);
+            var v02 = Interpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP2.Y, SortedP2.TextureCoordinates.Y);
+
+            // Concatenate the short sides
+            x01 = x01.Take(x01.Length - 1).ToArray(); // remove last element, it's the first in x12
+            var x012 = x01.Concat(x12).ToArray();
+            u01 = u01.Take(u01.Length - 1).ToArray(); // remove last element, it's the first in u12
+            var u012 = u01.Concat(u12).ToArray();
+            v01 = v01.Take(v01.Length - 1).ToArray(); // remove last element, it's the first in v12
+            var v012 = v01.Concat(v12).ToArray();
+
+            // Determine which is left and which is right
+            int m = x012.Length / 2;
+            double[] x_left, x_right, u_left, u_right, v_left, v_right;
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+                u_left = u02;
+                u_right = u012;
+                v_left = v02;
+                v_right = v012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+                u_left = u012;
+                u_right = u02;
+                v_left = v012;
+                v_right = v02;
+            }
+
+            // Рисует горизонтальные сегменты
+            for (int y = (int)SortedP0.Y; y < (int)SortedP2.Y; ++y)
+            {
+                int screen_y = -y + bmp.Height / 2;
+                if (screen_y < 0)
+                    break;
+                if (bmp.Height <= screen_y)
+                    continue;
+
+                var x_l = x_left[y - (int)SortedP0.Y];
+                var x_r = x_right[y - (int)SortedP0.Y];
+
+                var u_segment = Interpolate((int)x_l, u_left[y - (int)SortedP0.Y], (int)x_r, u_right[y - (int)SortedP0.Y]);
+                var v_segment = Interpolate((int)x_l, v_left[y - (int)SortedP0.Y], (int)x_r, v_right[y - (int)SortedP0.Y]);
+                for (int x = (int)x_l; x < (int)x_r; ++x)
+                {
+                    int screen_x = x + bmp.Width / 2;
+                    if (screen_x < 0)
+                        continue;
+                    if (bmp.Width <= screen_x)
+                        break;
+
+                    int texture_u = (int)(u_segment[x - (int)x_l] * (texture.Width - 1));
+                    int texture_v = (int)(v_segment[x - (int)x_l] * (texture.Height - 1));
+
+                    rgbValues[screen_x * 3 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + texture_v * bmpDataTexture.Stride];
+                    rgbValues[screen_x * 3 + 1 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + 1 + texture_v * bmpDataTexture.Stride];
+                    rgbValues[screen_x * 3 + 2 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + 2 + texture_v * bmpDataTexture.Stride];
+                }
+            }
+        }
+
+        public void ApplyTexture(Bitmap bmp, BitmapData bmpData, byte[] rgbValues, Bitmap texture, BitmapData bmpDataTexture, byte[] rgbValuesTexture)
+        {
+            foreach (var f in Faces)
+            {
+                f.find_normal(Center);
+                if (!f.IsVisible)
+                    continue;
+
+                // 3 vertices
+                Point3d P0 = new Point3d(f.Points[0]);
+                Point3d P1 = new Point3d(f.Points[1]);
+                Point3d P2 = new Point3d(f.Points[2]);
+                DrawTexture(P0, P1, P2, bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+
+                // 4 vertices
+                if (f.Points.Count == 4)
+                {
+                    P0 = new Point3d(f.Points[2]);
+                    P1 = new Point3d(f.Points[3]);
+                    P2 = new Point3d(f.Points[0]);
+                    DrawTexture(P0, P1, P2, bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
+                }
+            }
+        }
+
+
+
+}
+
+public sealed class Point3dComparer : IEqualityComparer<Point3d>
     {
         public bool Equals(Point3d x, Point3d y)
         {

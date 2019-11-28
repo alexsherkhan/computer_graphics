@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Lab6
 {
     public enum Axis { AXIS_X, AXIS_Y, AXIS_Z, OTHER };
     public enum Projection { PERSPECTIVE = 0, ISOMETRIC, ORTHOGR_X, ORTHOGR_Y, ORTHOGR_Z };
-    public enum CameraMode { Simple, Clipping, Buffer, Guro}
+    public enum CameraMode { Simple, Clipping, Buffer, Guro, Texture }
     public enum Reflect { X, Y, Z};
     public delegate float Function(float x, float y);
 
@@ -28,6 +29,11 @@ namespace Lab6
         Polyhedron figure = null;
         Axis line_mode = 0;
         Camera camera = null;
+
+        Bitmap  texture;
+        BitmapData  bmpDataTexture; // for picturebox and texture
+        byte[] rgbValuesTexture; // for picturebox and texture
+
 
         public Form1()
         {
@@ -48,6 +54,15 @@ namespace Lab6
             colorDialog1.FullOpen = true;
             colorDialog1.Color = fill_color;
             label_color.BackColor = fill_color;
+
+            texture = Image.FromFile("../../texture.jpg") as Bitmap;
+            Rectangle rectTexture = new Rectangle(0, 0, texture.Width, texture.Height);
+            bmpDataTexture = texture.LockBits(rectTexture, ImageLockMode.ReadWrite, texture.PixelFormat);
+            int bytesTexture = Math.Abs(bmpDataTexture.Stride) * texture.Height;
+            rgbValuesTexture = new byte[bytesTexture];
+            System.Runtime.InteropServices.Marshal.Copy(bmpDataTexture.Scan0, rgbValuesTexture, 0, bytesTexture);
+
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         private void Button_cube_Click(object sender, EventArgs e)
@@ -406,6 +421,23 @@ namespace Lab6
             camera.show(camera_g);
 
 
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (figure != null)
+            {
+                if (radioButton4.Checked)
+                {
+                    camera.setMode(CameraMode.Texture);
+                    camera.texture = texture;
+                    camera.bmpDataTexture = bmpDataTexture;
+                    camera.rgbValuesTexture = rgbValuesTexture;
+                    camera.picture = pictureBox3;
+                }
+            }
+            camera.show(camera_g);
+ 
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
