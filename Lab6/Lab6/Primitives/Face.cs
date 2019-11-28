@@ -84,10 +84,11 @@ namespace Lab6.Primitives
                     {
                         g.DrawLine(pen, Points[i].toPointF(pr), Points[(i + 1) % Points.Count].toPointF(pr));
                     }
-                    //pen = Pens.Red;
-                    //this.find_normal(new Point3d(0, 0, 0));
-                    //List<double> CQ = new List<double> { Points[1].X - 0, Points[1].Y - 0, Points[1].Z - 0};
-                    //g.DrawLine(pen, new Point3d((float)Center.X, (float)Center.Y, (float)Center.Z).toPointF(pr), new Point3d((float)Normal[0], (float)Normal[1], (float)Normal[2]).toPointF(pr));
+                   // pen = Pens.Red;
+                   // this.find_center();
+                   // this.find_normal(new Point3d(0, 0, 0));
+                   // List<double> CQ = new List<double> { Points[1].X - 0, Points[1].Y - 0, Points[1].Z - 0};
+                   // g.DrawLine(pen, new Point3d((float)Center.X, (float)Center.Y, (float)Center.Z).toPointF(pr), new Point3d((float)Normal[0], (float)Normal[1], (float)Normal[2]).toPointF(pr));
                 }
                  else if (Points.Count == 1)
                      g.DrawRectangle(pen, (float)Points[0].X, (float)Points[0].Y, 1, 1);
@@ -113,8 +114,9 @@ namespace Lab6.Primitives
                     Normal[2] *= -1;
                 }
 
-                Point3d E = new Point3d(100, 100, 100);
-
+                Point3d E = new Point3d(0, 0, 100);
+                
+                if (camera != null)
                 E = camera;
                 
 
