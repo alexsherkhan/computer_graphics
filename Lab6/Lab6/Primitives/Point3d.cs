@@ -18,11 +18,20 @@ namespace Lab6.Primitives
         public double Y { get { return coords[1]; } set { coords[1] = value; } }
         public double Z { get { return coords[2]; } set { coords[2] = value; } }
         public PointF TextureCoordinates { get; set; } = new PointF();
+
         public Point3d(double x, double y, double z)
         {
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public Point3d(double x, double y, double z, PointF textureCoordinates)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            TextureCoordinates = textureCoordinates;
         }
 
         //Load from file
@@ -44,6 +53,7 @@ namespace Lab6.Primitives
             X = p.X;
             Y = p.Y;
             Z = p.Z;
+            TextureCoordinates = p.TextureCoordinates;
         }
 
         public string to_string()

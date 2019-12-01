@@ -179,36 +179,30 @@ namespace Lab6.Primitives
         public void make_hexahedron(float cube_half_size = 50)
         {
             Face f = new Face(
-                new List<Point3d>
-                {
-                    new Point3d(-cube_half_size, cube_half_size, cube_half_size),
-                    new Point3d(cube_half_size, cube_half_size, cube_half_size),
-                    new Point3d(cube_half_size, -cube_half_size, cube_half_size),
-                    new Point3d(-cube_half_size, -cube_half_size, cube_half_size)
-                }
-            );
-
+                          new List<Point3d>
+                          {
+                    new Point3d(-cube_half_size, cube_half_size, cube_half_size, new PointF(0, 0)),
+                    new Point3d(cube_half_size, cube_half_size, cube_half_size, new PointF(1, 0)),
+                    new Point3d(cube_half_size, -cube_half_size, cube_half_size, new PointF(1, 1)),
+                    new Point3d(-cube_half_size, -cube_half_size, cube_half_size, new PointF(0, 1))
+                          }
+                      );
 
             Faces = new List<Face> { f }; // front face
 
-
-            List<Point3d> l1 = new List<Point3d>();
             // back face
-            foreach (var point in f.Points)
-            {
-                l1.Add(new Point3d(point.X, point.Y, point.Z - 2 * cube_half_size));
-            }
             Face f1 = new Face(
                     new List<Point3d>
                     {
-                        new Point3d(-cube_half_size, cube_half_size, -cube_half_size),
-                        new Point3d(-cube_half_size, -cube_half_size, -cube_half_size),
-                        new Point3d(cube_half_size, -cube_half_size, -cube_half_size),
-                        new Point3d(cube_half_size, cube_half_size, -cube_half_size)
+                        new Point3d(-cube_half_size, cube_half_size, -cube_half_size, new PointF(1, 0)),
+                        new Point3d(-cube_half_size, -cube_half_size, -cube_half_size, new PointF(1, 1)),
+                        new Point3d(cube_half_size, -cube_half_size, -cube_half_size, new PointF(0, 1)),
+                        new Point3d(cube_half_size, cube_half_size, -cube_half_size, new PointF(0, 0))
                     });
 
             Faces.Add(f1);
 
+            // down face
             List<Point3d> l2 = new List<Point3d>
             {
                 new Point3d(f.Points[2]),
@@ -216,9 +210,14 @@ namespace Lab6.Primitives
                 new Point3d(f1.Points[1]),
                 new Point3d(f.Points[3]),
             };
+            l2[0].TextureCoordinates = new PointF(1, 0);
+            l2[1].TextureCoordinates = new PointF(1, 1);
+            l2[2].TextureCoordinates = new PointF(0, 1);
+            l2[3].TextureCoordinates = new PointF(0, 0);
             Face f2 = new Face(l2);
             Faces.Add(f2);
 
+            // up face
             List<Point3d> l3 = new List<Point3d>
             {
                 new Point3d(f1.Points[0]),
@@ -226,9 +225,14 @@ namespace Lab6.Primitives
                 new Point3d(f.Points[1]),
                 new Point3d(f.Points[0]),
             };
+            l3[0].TextureCoordinates = new PointF(0, 0);
+            l3[1].TextureCoordinates = new PointF(1, 0);
+            l3[2].TextureCoordinates = new PointF(1, 1);
+            l3[3].TextureCoordinates = new PointF(0, 1);
             Face f3 = new Face(l3);
             Faces.Add(f3);
 
+            // left face
             List<Point3d> l4 = new List<Point3d>
             {
                 new Point3d(f1.Points[0]),
@@ -236,9 +240,14 @@ namespace Lab6.Primitives
                 new Point3d(f.Points[3]),
                 new Point3d(f1.Points[1])
             };
+            l4[0].TextureCoordinates = new PointF(0, 0);
+            l4[1].TextureCoordinates = new PointF(1, 0);
+            l4[2].TextureCoordinates = new PointF(1, 1);
+            l4[3].TextureCoordinates = new PointF(0, 1);
             Face f4 = new Face(l4);
             Faces.Add(f4);
 
+            // right face
             List<Point3d> l5 = new List<Point3d>
             {
                 new Point3d(f1.Points[3]),
@@ -246,6 +255,10 @@ namespace Lab6.Primitives
                 new Point3d(f.Points[2]),
                 new Point3d(f.Points[1])
             };
+            l5[0].TextureCoordinates = new PointF(1, 0);
+            l5[1].TextureCoordinates = new PointF(1, 1);
+            l5[2].TextureCoordinates = new PointF(0, 1);
+            l5[3].TextureCoordinates = new PointF(0, 0);
             Face f5 = new Face(l5);
             Faces.Add(f5);
 
@@ -268,6 +281,9 @@ namespace Lab6.Primitives
                     new Point3d(cube.Faces[1].Points[3])
                 }
             );
+            f0.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f0.Points[1].TextureCoordinates = new PointF(0, 1);
+            f0.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f1 = new Face(
                 new List<Point3d>
@@ -277,6 +293,9 @@ namespace Lab6.Primitives
                     new Point3d(cube.Faces[0].Points[2])
                 }
             );
+            f1.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f1.Points[1].TextureCoordinates = new PointF(0, 1);
+            f1.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f2 = new Face(
                 new List<Point3d>
@@ -286,6 +305,9 @@ namespace Lab6.Primitives
                     new Point3d(cube.Faces[0].Points[0])
                 }
             );
+            f2.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f2.Points[1].TextureCoordinates = new PointF(0, 1);
+            f2.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Face f3 = new Face(
                 new List<Point3d>
@@ -295,6 +317,9 @@ namespace Lab6.Primitives
                     new Point3d(cube.Faces[1].Points[3])
                 }
             );
+            f3.Points[0].TextureCoordinates = new PointF(0.5f, 0);
+            f3.Points[1].TextureCoordinates = new PointF(0, 1);
+            f3.Points[2].TextureCoordinates = new PointF(1, 1);
 
             Faces = new List<Face> { f0, f1, f2, f3 };
             find_center();
@@ -563,6 +588,7 @@ namespace Lab6.Primitives
 
             find_center();
         }
+
 
         private int[] Interpolate(int i0, int d0, int i1, int d1)
         {

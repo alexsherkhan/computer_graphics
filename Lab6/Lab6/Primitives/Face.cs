@@ -18,7 +18,7 @@ namespace Lab6.Primitives
             public bool IsVisible { get; set; } = true;
             public Face(Face face)
             {
-                Points = face.Points.Select(pt => new Point3d(pt.X, pt.Y, pt.Z)).ToList();
+                Points = face.Points.Select(pt => new Point3d(pt.X, pt.Y, pt.Z, pt.TextureCoordinates)).ToList();
                 Center = new Point3d(face.Center);
                 if (Normal != null)
                     Normal = new List<double>(face.Normal);

@@ -171,6 +171,7 @@ namespace Lab6.Primitives
             rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
             camera_figure.ApplyTexture(bmp, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture);
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+           // texture.Save("img.png", System.Drawing.Imaging.ImageFormat.Png);
             bmp.UnlockBits(bmpData);
             picture.Image = bmp;
         }
