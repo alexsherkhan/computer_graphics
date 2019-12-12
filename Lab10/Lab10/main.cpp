@@ -13,6 +13,17 @@ struct Color
 	float B;
 };
 
+struct Tuple
+{
+	double first;
+	double second;
+	double third;
+
+	Tuple(double f, double s, double t) : first(f), second(s), third(t) {}
+};
+
+
+
 double rotateX = 0;
 double rotateY = 0;
 double rotateZ = 0;
@@ -24,10 +35,9 @@ static int w = 0, h = 0;
 // Первая показанная картинка (стандартный примитив : куб + 2 треугольника + четырехугольник)
 bool firstShow = true;
 bool treeMode = false;
-
+bool isPerspective = false;
 // Индекс примитива в векторе, который нужно выводить 
 int index = 0;
-
 // Ф-ия вызываемая перед вхождением в главный цикл
 void init(void)
 {
@@ -105,6 +115,7 @@ void triangle()
 	glEnd();
 }
 
+
 // Ф-ия построения треугольника, окрашенного в различные цвета
 void triangleWithDifferentVertex()
 {
@@ -115,21 +126,7 @@ void triangleWithDifferentVertex()
 	glEnd();
 }
 
-typedef void(*callback_t)(void);
-vector<callback_t> allPrimitives = { solidCube, wireCube, wireTeapot, wireTorus,
-wireTetrahedron, wireIcosahedron };
-
-// Ф-ия изменения примитива по щелчку мыши
-void mouseChangePrimitive(int button, int state, int x, int y)
-{
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-	{
-		firstShow = false;
-		changeColor();
-		index = rand() % allPrimitives.size();
-	}
-}
- void drawChristmasTree(double scale = 0.5)
+void drawChristmasTree(double scale = 0.5)
 {
 	glPushMatrix();
 
@@ -149,6 +146,61 @@ void mouseChangePrimitive(int button, int state, int x, int y)
 	glutSolidCone(0.4, 0.3, 32, 32);
 	glPopMatrix();
 }
+
+void treeForest()
+{
+	vector<Tuple> trees = {
+		Tuple(0.5, 0.5, 0.5),
+			Tuple(0.8, 0.8, 0.3),
+			Tuple(0.8, 0.3, 0.4),
+			Tuple(0.2, 0.3, 0.4),
+			Tuple(0.1, 0.1, 0.2),
+			Tuple(0.9, 0.1, 0.3),
+			Tuple(0.5, 0.1, 0.2),
+			Tuple(0.7, 0.1, 0.2),
+			Tuple(0.3, 0.1, 0.2),
+	};
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (isPerspective) gluPerspective(60, w * 1.0 / h, 0.1, 100);
+	else glOrtho(-1, 1, -1, 1, -100, 100);
+
+	glMatrixMode(GL_MODELVIEW);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glTranslated(0, 0, -1);
+	glRotated(20, 1, 0, 0);
+	glRotated(0, 0, 1, 0);
+	glTranslated(0.5, 0, 0.5);
+
+	for each (Tuple tree in trees)
+	{
+		glPushMatrix();
+		glTranslated(-tree.first, 0, -tree.second);
+		drawChristmasTree(tree.third);
+		glPopMatrix();
+	}
+	glFlush();
+}
+
+typedef void(*callback_t)(void);
+vector<callback_t> allPrimitives = { solidCube, wireCube, wireTeapot, wireTorus,
+wireTetrahedron, wireIcosahedron };
+
+
+// Ф-ия изменения примитива по щелчку мыши
+void mouseChangePrimitive(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		firstShow = false;
+		changeColor();
+		index = rand() % allPrimitives.size();
+	}
+}
+
 // Управление клавиатурой
 void specialKeys(int key, int x, int y)
 {
@@ -160,10 +212,12 @@ void specialKeys(int key, int x, int y)
 	case GLUT_KEY_LEFT: rotateY -= 5; break;
 	case GLUT_KEY_PAGE_UP: rotateZ += 5; break;
 	case GLUT_KEY_PAGE_DOWN: rotateZ -= 5; break;
-	case GLUT_KEY_SHIFT_L: treeMode = !treeMode; break;
+	case GLUT_KEY_CTRL_L: treeMode = !treeMode; break;
+	case GLUT_KEY_CTRL_R: isPerspective = !isPerspective; break;
 	}
 	glutPostRedisplay();
 }
+
 
 // Ф-ия, вызываемая каждый кадр
 void update()
@@ -184,7 +238,7 @@ void update()
 		rectangle();
 		triangleWithDifferentVertex();
 	}if (treeMode) {
-		drawChristmasTree();
+		treeForest();
 	}
 	else
 	{
