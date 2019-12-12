@@ -23,6 +23,7 @@ static int w = 0, h = 0;
 
 // Первая показанная картинка (стандартный примитив : куб + 2 треугольника + четырехугольник)
 bool firstShow = true;
+bool treeMode = false;
 
 // Индекс примитива в векторе, который нужно выводить 
 int index = 0;
@@ -128,7 +129,26 @@ void mouseChangePrimitive(int button, int state, int x, int y)
 		index = rand() % allPrimitives.size();
 	}
 }
+ void drawChristmasTree(double scale = 0.5)
+{
+	glPushMatrix();
 
+	glScaled(scale, scale, scale);
+	glRotated(-90, 1, 0, 0);
+	glColor3d(0.9, 0.6, 0.3);
+	glutSolidCylinder(0.1, 0.3, 32, 32);
+
+	glTranslated(0, 0, 0.3);
+	glColor3d(0, 1, 0);
+	glutSolidCone(0.4, 0.3, 32, 32);
+	glTranslated(0, 0, 0.2);
+	glScaled(0.7, 0.7, 0.7);
+	glutSolidCone(0.4, 0.3, 32, 32);
+	glTranslated(0, 0, 0.2);
+	glScaled(0.7, 0.7, 0.7);
+	glutSolidCone(0.4, 0.3, 32, 32);
+	glPopMatrix();
+}
 // Управление клавиатурой
 void specialKeys(int key, int x, int y)
 {
@@ -140,6 +160,7 @@ void specialKeys(int key, int x, int y)
 	case GLUT_KEY_LEFT: rotateY -= 5; break;
 	case GLUT_KEY_PAGE_UP: rotateZ += 5; break;
 	case GLUT_KEY_PAGE_DOWN: rotateZ -= 5; break;
+	case GLUT_KEY_SHIFT_L: treeMode = !treeMode; break;
 	}
 	glutPostRedisplay();
 }
@@ -162,6 +183,8 @@ void update()
 		triangle();
 		rectangle();
 		triangleWithDifferentVertex();
+	}if (treeMode) {
+		drawChristmasTree();
 	}
 	else
 	{
