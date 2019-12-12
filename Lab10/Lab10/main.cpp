@@ -29,11 +29,12 @@ double rotateY = 0;
 double rotateZ = 0;
 
 static Color color;
-
+int rotate_mode = 0;
 static int w = 0, h = 0;
 
 // Первая показанная картинка (стандартный примитив : куб + 2 треугольника + четырехугольник)
 bool firstShow = true;
+bool GSBMode = false;
 bool treeMode = false;
 bool isPerspective = false;
 // Индекс примитива в векторе, который нужно выводить 
@@ -125,6 +126,105 @@ void triangleWithDifferentVertex()
 	glColor3f(0.0, 0.0, 1.0);	glVertex2f(0.0f, -0.5f);
 	glEnd();
 }
+  
+void Draw_GSB()
+{
+	// clearing the window or remove all drawn objects    
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+	if (!isPerspective)
+	{
+		glViewport(0, 0, w, h);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(65.0, w / h, 1.0, 1000.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(-0.3, 0.5, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	}
+	else
+	{
+		glViewport(0, 0, w, h);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-2, 2, -2, 2, -2, 2);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	glTranslatef(0, 0.0, 0.0);
+	glColor3f(1, 1, 1);
+	glutSolidCube(0.1);
+
+	if (rotate_mode == 0)
+	{
+		glRotatef(rotateX, 1, 0, 0);
+		glRotatef(rotateY, 0, 1, 0);
+		glRotatef(rotateZ, 0, 0, 1);
+	}
+
+	//gold
+	glPushMatrix();
+	glTranslatef(1, 0.0, 1.0);
+	if (rotate_mode)
+	{
+		glRotatef(rotateX, 1, 0, 0);
+		glRotatef(rotateY, 0, 1, 0);
+		glRotatef(rotateZ, 0, 0, 1);
+	}
+
+	glColor3f(1, 0.78, 0.09);
+	float mat_specular[] = { 1,1,1,1 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0);
+	glScalef(1, 2, 1);
+	glutSolidCube(0.5);
+	glPopMatrix();
+
+	//silver
+	glPushMatrix();
+	if (rotate_mode == 1)
+	{
+		glTranslatef(1, 0.0, 1.0);
+		glRotatef(rotateX, 1, 0, 0);
+		glRotatef(rotateY, 0, 1, 0);
+		glRotatef(rotateZ, 0, 0, 1);
+		glTranslatef(-1, 0.0, -1.0);
+	}
+	glTranslatef(0.25, -0.125, 1.0);
+	if (rotate_mode == 2)
+	{
+		glRotatef(rotateX, 1, 0, 0);
+		glRotatef(rotateY, 0, 1, 0);
+		glRotatef(rotateZ, 0, 0, 1);
+	}
+	glColor3f(0.75, 0.75, 0.75);
+	glScalef(1, 1.5, 1);
+	glutSolidCube(0.5);
+	glPopMatrix();
+
+	//bronze
+	glPushMatrix();
+	if (rotate_mode == 1)
+	{
+		glTranslatef(1, 0.0, 1.0);
+		glRotatef(rotateX, 1, 0, 0);
+		glRotatef(rotateY, 0, 1, 0);
+		glRotatef(rotateZ, 0, 0, 1);
+		glTranslatef(-1, 0.0, -1.0);
+	}
+	glTranslatef(1.7, -0.25, 1.0);
+	if (rotate_mode == 2)
+	{
+		glRotatef(rotateX, 1, 0, 0);
+		glRotatef(rotateY, 0, 1, 0);
+		glRotatef(rotateZ, 0, 0, 1);
+	}
+	glColor3f(0.8, 0.5, 0.2);
+	glutSolidCube(0.5);
+	glPopMatrix();
+
+}
 
 void drawChristmasTree(double scale = 0.5)
 {
@@ -214,6 +314,15 @@ void specialKeys(int key, int x, int y)
 	case GLUT_KEY_PAGE_DOWN: rotateZ -= 5; break;
 	case GLUT_KEY_CTRL_L: treeMode = !treeMode; break;
 	case GLUT_KEY_CTRL_R: isPerspective = !isPerspective; break;
+	case GLUT_KEY_F1:
+		rotateX = rotateY = rotateZ = 0;
+		rotate_mode = 0; break;
+	case GLUT_KEY_F2:
+		rotateX = rotateY = rotateZ = 0; rotate_mode = 1; break;
+	case GLUT_KEY_F3:
+		rotateX = rotateY = rotateZ = 0; rotate_mode = 2; break;
+	case GLUT_KEY_F4:
+		GSBMode =!GSBMode; break;
 	}
 	glutPostRedisplay();
 }
@@ -237,8 +346,12 @@ void update()
 		triangle();
 		rectangle();
 		triangleWithDifferentVertex();
-	}if (treeMode) {
+	}
+	if (treeMode) {
 		treeForest();
+	}
+	if (GSBMode) {
+		Draw_GSB();
 	}
 	else
 	{
