@@ -129,10 +129,10 @@ void triangleWithDifferentVertex()
   
 void Draw_GSB()
 {
-	// clearing the window or remove all drawn objects    
+	// очистка 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+	glEnable(GL_DEPTH_TEST);
 	if (!isPerspective)
 	{
 		glViewport(0, 0, w, h);
@@ -141,7 +141,9 @@ void Draw_GSB()
 		gluPerspective(65.0, w / h, 1.0, 1000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(-0.3, 0.5, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		gluLookAt(2.0, 0.0, 5.0,// Положение глаз, взгляд "из"
+					0.0, 0.0, 0.0, // Цель, взгляд "на"
+					0.0, 1.0, 0.0);
 	}
 	else
 	{
@@ -164,9 +166,9 @@ void Draw_GSB()
 	}
 
 	//gold
-	glPushMatrix();
+	glPushMatrix();// сохраняем текущие координаты
 	glTranslatef(1, 0.0, 1.0);
-	if (rotate_mode)
+	if (rotate_mode == 2)
 	{
 		glRotatef(rotateX, 1, 0, 0);
 		glRotatef(rotateY, 0, 1, 0);
@@ -179,7 +181,7 @@ void Draw_GSB()
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0);
 	glScalef(1, 2, 1);
 	glutSolidCube(0.5);
-	glPopMatrix();
+	glPopMatrix();// возвращаемся к старой системе координат
 
 	//silver
 	glPushMatrix();
@@ -201,10 +203,10 @@ void Draw_GSB()
 	glColor3f(0.75, 0.75, 0.75);
 	glScalef(1, 1.5, 1);
 	glutSolidCube(0.5);
-	glPopMatrix();
+	glPopMatrix();// возвращаемся к старой системе координат
 
 	//bronze
-	glPushMatrix();
+	glPushMatrix();// сохраняем текущие координаты
 	if (rotate_mode == 1)
 	{
 		glTranslatef(1, 0.0, 1.0);
@@ -222,7 +224,7 @@ void Draw_GSB()
 	}
 	glColor3f(0.8, 0.5, 0.2);
 	glutSolidCube(0.5);
-	glPopMatrix();
+	glPopMatrix();// возвращаемся к старой системе координат
 
 }
 
@@ -249,6 +251,8 @@ void drawChristmasTree(double scale = 0.5)
 
 void treeForest()
 {
+
+
 	vector<Tuple> trees = {
 		Tuple(0.5, 0.5, 0.5),
 			Tuple(0.8, 0.8, 0.3),
@@ -267,7 +271,9 @@ void treeForest()
 	else glOrtho(-1, 1, -1, 1, -100, 100);
 
 	glMatrixMode(GL_MODELVIEW);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glLoadIdentity();
 
 	glTranslated(0, 0, -1);
@@ -347,10 +353,9 @@ void update()
 		rectangle();
 		triangleWithDifferentVertex();
 	}
-	if (treeMode) {
+	else if (treeMode) {
 		treeForest();
-	}
-	if (GSBMode) {
+	} else if (GSBMode) {
 		Draw_GSB();
 	}
 	else
