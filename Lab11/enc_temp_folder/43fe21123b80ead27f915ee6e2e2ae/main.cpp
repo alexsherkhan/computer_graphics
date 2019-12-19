@@ -328,6 +328,18 @@ void tryingTexturedCube(GLfloat size)
 	glBindTexture(GL_TEXTURE_2D, texture2);
 	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_QUADS);
+	/*int normalArr[6][3] = { {0, 0, 1}, {0, 0, -1}, {0, 1, 0}, {0, -1, 0}, {1, 0, 0}, {-1, 0, 0 } };
+	float coordArr[4][2] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+	int vertexArr[4][3] = { {-1, -1, 1}, {1, -1, 1}, {1, 1, 1}, {-1, 1, 1} };
+	for (int i = 0; i < 6; ++i){
+		for (int j = 0; j < 4; ++j) {
+			for (int k = 0; k < 4; ++k) {
+				glNormal3f(normalArr[i][0], normalArr[i][1] , normalArr[i][2]);
+				glTexCoord2f(coordArr[j][0], coordArr[j][1]);
+				glVertex3f(vertexArr[k][0] * size, vertexArr[k][1] * size, vertexArr[k][2] * size);  // Bottom Left Of The Texture and Quad
+			}
+		}
+	}*/
 	// Front Face
 	glNormal3f(0, 0, 1); glTexCoord2f(0.0f, 0.0f); glVertex3f(-size, -size, size);  // Bottom Left Of The Texture and Quad
 	glNormal3f(0, 0, 1); glTexCoord2f(1.0f, 0.0f); glVertex3f(size, -size, size);  // Bottom Right Of The Texture and Quad
@@ -377,7 +389,8 @@ void drawCar()
 	glRotatef(car_angle, 0, 1, 0);
 
 	// корпус
-
+	//glPushMatrix();
+	//glColor3f(0.8, 0.8, 0.8);
 	for (float y = -0.5; y < 0.5; y += 0.1)
 	for (float x = -0.5; x < 0.5; x += 0.1)
 			for (float z = -1; z < 1.5; z+= 0.1) {
@@ -385,6 +398,7 @@ void drawCar()
 				if (y < 0 && x * x - (y + 0.5) * (y + 0.5) > (z + 0.5)*(z + 0.5) )continue;
 				if (y < 0 && x * x - (y + 0.5) * (y + 0.5) > (z - 0.5) * (z - 0.5))continue;
 				if (y > 0 && x * x + y * y  + (z * z)/(2) > 0.49 )continue;
+				//if (y > 0 && z + y < 1.5) continue;
 				glPushMatrix();
 				glTranslatef(x, y, z);
 				glScalef(0.1, 0.1, 0.1);
@@ -392,6 +406,12 @@ void drawCar()
 				glTranslatef(-x, -y, -z);
 				glPopMatrix();
 			}
+	//glTranslatef(0, 0, 1.2);
+	//glutSolidCube(0.5);
+	//glTranslatef(0, 0, -1.2);
+	/*glScalef(0.1, 0.1, 0.1);
+	tryingTexturedCube(0.5);*/
+	//glPopMatrix();
 
 	glTranslatef(0, -0.6, 0);
 	glColor3f(0.2, 0.2, 0.2);
