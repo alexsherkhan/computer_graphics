@@ -45,11 +45,32 @@ void init(void)
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
 
+	// Street lights
+	const GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1 };
+	const GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+	const GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
+
+	glLightfv(GL_LIGHT2, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, light_specular);
+
+	glLightfv(GL_LIGHT3, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, light_specular);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 
 	makeTextureImage();
 
+	// Прожектор камеры 
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30.0);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.01);
 
 
 }
@@ -98,7 +119,47 @@ void reshape(int w, int h)
 	setCamera();
 }
 
+void drawLights()
+{
+	const GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
+	const GLfloat mat_emission[] = { 1, 1, 1, 0.0 };
+	const GLfloat position[] = { 0, 4, 0, 1 };
+	const GLfloat car_mat_emission[] = { 1, 1, 0, 0.0 };
+	glColor3f(1.0, 1.0, 1.0);
 
+	// lamps
+	glPushMatrix();
+	glTranslatef(-5, 0, 0);
+	glLightfv(GL_LIGHT1, GL_POSITION, position);
+	glTranslatef(5, 0, -10);
+	glLightfv(GL_LIGHT2, GL_POSITION, position);
+	glTranslatef(3, 0, 13);
+	glLightfv(GL_LIGHT3, GL_POSITION, position);
+	glPopMatrix();
+
+	// lamps
+	glPushMatrix();
+	if (glIsEnabled(GL_LIGHT1))
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+	else glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+	glColor3f(1.0, 1.0, 0.0);
+	glTranslatef(-5, 4, 0);
+	glutSolidCube(0.1);
+	glTranslatef(5, 0, -10);
+	if (glIsEnabled(GL_LIGHT2))
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+	else glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+	glutSolidCube(0.1);
+	glTranslatef(3, 0, 13);
+	if (glIsEnabled(GL_LIGHT3))
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+	else glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+	glutSolidCube(0.1);
+	glColor3f(1.0, 1.0, 1.0);
+	glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+	glPopMatrix();
+
+}
 
 void drawRoad()
 {
@@ -131,6 +192,40 @@ void drawRoad()
 	glDisable(GL_TEXTURE_2D);
 }
 
+void drawLamps()
+{
+	glColor3f(0.5, 0.5, 0.5);
+
+	//1 фонарь
+	glPushMatrix();
+	glTranslatef(-5, 0, 0);
+	glRotatef(-90, 1, 0, 0);
+	glutSolidCone(0.2, 4, 10, 10);
+	glTranslatef(0, 0.1, 4);
+	glRotatef(90, 1, 0, 0);
+	glutSolidCone(0.15, 1, 10, 10);
+	glPopMatrix();
+
+	//2 фонарь
+	glPushMatrix();
+	glTranslatef(0, 0, -10);
+	glRotatef(-90, 1, 0, 0);
+	glutSolidCone(0.2, 4, 10, 10);
+	glTranslatef(0, 0.1, 4);
+	glRotatef(90, 1, 0, 0);
+	glutSolidCone(0.15, 1, 10, 10);
+	glPopMatrix();
+
+	//3 фонарь
+	glPushMatrix();
+	glTranslatef(3, 0, 3);
+	glRotatef(-90, 1, 0, 0);
+	glutSolidCone(0.2, 4, 10, 10);
+	glTranslatef(0, 0.1, 4);
+	glRotatef(90, 1, 0, 0);
+	glutSolidCone(0.15, 1, 10, 10);
+	glPopMatrix();
+}
 
 // Отображение
 void display(void)
@@ -138,9 +233,49 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	
+	drawLights();
+
 	drawRoad();
+
+	drawLamps();
 	
 	glutSwapBuffers();
+}
+
+// Реакция на клавиатуру
+void specialKeys(int key, int x, int y)
+{
+	switch (key)
+	{
+	case GLUT_KEY_UP: camera_pos += 0.5; break;
+	case GLUT_KEY_DOWN: camera_pos -= 0.5; break;
+	case GLUT_KEY_RIGHT: camera_angle -= 3; break;
+	case GLUT_KEY_LEFT: camera_angle += 3; break;
+	case GLUT_KEY_PAGE_UP: camera_rad -= 0.5; break;
+	case GLUT_KEY_PAGE_DOWN: camera_rad += 0.5; break;
+	case GLUT_KEY_F1:
+		if (glIsEnabled(GL_LIGHT1))
+			glDisable(GL_LIGHT1);
+		else glEnable(GL_LIGHT1);
+		break;
+	case GLUT_KEY_F2:
+		if (glIsEnabled(GL_LIGHT2))
+			glDisable(GL_LIGHT2);
+		else glEnable(GL_LIGHT2);
+		break;
+	case GLUT_KEY_F3:
+		if (glIsEnabled(GL_LIGHT3))
+			glDisable(GL_LIGHT3);
+		else glEnable(GL_LIGHT3);
+		break;
+	case GLUT_KEY_F10:
+		if (glIsEnabled(GL_LIGHT0))
+			glDisable(GL_LIGHT0);
+		else glEnable(GL_LIGHT0);
+		break;
+	}
+	setCamera();
+	glutPostRedisplay();
 }
 
 int main(int argc, char * argv[])
@@ -153,7 +288,8 @@ int main(int argc, char * argv[])
 	init();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	
+	glutSpecialFunc(specialKeys);
+
 	glutMainLoop();
 	return 0;
 }
