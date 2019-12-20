@@ -7,11 +7,12 @@
 #include<conio.h>
 #include<math.h>
 #include<string.h>
-#include <SOIL.h>
+#include<SOIL.h>
 
 using std::vector;
 
 GLuint texture;
+GLuint texture2;
 
 double pi = 3.14159265358979323846;
 
@@ -19,6 +20,8 @@ float camera_angle = 50;
 float camera_pos = 5;
 float camera_rad = 10;
 float car_angle = 0;
+int is_ahead = 0;
+int is_back = 0;
 int width = 0, height = 0;
 
 void makeTextureImage()
@@ -34,9 +37,20 @@ void makeTextureImage()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	
+
+	texture2 = SOIL_load_OGL_texture
+	(
+		"car.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+	);
 }
 
+
+float x = 0; float z = 0;
+float SPEED = 0.1;
+float wheel_angle = 0;
 
 // Инициализация
 void init(void)
@@ -72,7 +86,35 @@ void init(void)
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.01);
 
+	// Car lights
+	const GLfloat car_diffuse[] = { 1.0, 1.0, 0, 0 };
+	const GLfloat car_ambient[] = { 0.0, 0.0, 0.0, 1 };
+	const GLfloat car_specular[] = { 1.0, 1.0, 0, 1.0 };
+	glLightfv(GL_LIGHT4, GL_AMBIENT, car_ambient);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE, car_diffuse);
+	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 45.0);
+	glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 1.0);
+	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, 0.5);
+	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.3);
+	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.1);
+	glLightfv(GL_LIGHT5, GL_AMBIENT, car_ambient);
+	glLightfv(GL_LIGHT5, GL_DIFFUSE, car_diffuse);
+	glLightf(GL_LIGHT5, GL_SPOT_CUTOFF, 45.0);
+	glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 1.0);
+	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, 0.5);
+	glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, 0.3);
+	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION, 0.1);
 
+	glEnable(GL_FOG);
+	{
+		const GLfloat fogColor[4] = { 0.5, 0.5, 0.5, 1 };
+		glFogi(GL_FOG_MODE, GL_LINEAR);
+		glFogfv(GL_FOG_COLOR, fogColor);
+		glFogf(GL_FOG_DENSITY, 0.35);
+		glHint(GL_FOG_HINT, GL_NICEST);
+		glFogf(GL_FOG_START, 5.0);
+		glFogf(GL_FOG_END, 50.0);
+	}
 }
 
 double gr_cos(float angle) noexcept
@@ -137,6 +179,22 @@ void drawLights()
 	glLightfv(GL_LIGHT3, GL_POSITION, position);
 	glPopMatrix();
 
+	// car lights
+	const GLfloat spot_position[] = { 0, 0, 0, 1 };
+	const GLfloat spot_direction[] = { 0, 0, 1 };
+	glPushMatrix();
+	glTranslatef(x, 0.9, z);
+	glRotatef(car_angle, 0, 1, 0);
+	glTranslated(0.15, -0.15, 1.45);
+	glColor3f(1, 1, 0);
+	glLightfv(GL_LIGHT4, GL_POSITION, spot_position);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, spot_direction);
+	glTranslated(-0.3, 0, 0);
+	glLightfv(GL_LIGHT5, GL_POSITION, spot_position);
+	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, spot_direction);
+	glPopMatrix();
+
+
 	// lamps
 	glPushMatrix();
 	if (glIsEnabled(GL_LIGHT1))
@@ -159,38 +217,21 @@ void drawLights()
 	glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
 	glPopMatrix();
 
+	// car lights
+	glPushMatrix();
+	glTranslatef(x, 0.9, z);
+	glRotatef(car_angle, 0, 1, 0);
+	glTranslated(0.15, -0.15, 1.45);
+	glColor3f(1, 1, 0);
+	if (glIsEnabled(GL_LIGHT4))
+		glMaterialfv(GL_FRONT, GL_EMISSION, car_mat_emission);
+	glutSolidSphere(0.1, 10, 10);
+	glTranslated(-0.3, 0, 0);
+	glutSolidSphere(0.1, 10, 10);
+	glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+	glPopMatrix();
 }
 
-void drawRoad()
-{
-	glColor3f(1, 1, 1);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glEnable(GL_TEXTURE_2D);
-	glBegin(GL_QUADS);
-	const float delta = 0.25;
-	const float texture_delta = 0.125;
-	int kk = 0;
-	float ff = texture_delta;
-	for (float i = -40; i < 40; i += delta)
-	{
-		int k = 0;
-		float f = texture_delta;
-		for (float j = -40; j < 40; j += delta)
-		{
-			glNormal3f(0, 1, 0); glTexCoord2f(ff - texture_delta, f - texture_delta); glVertex3f(i - delta, 0, j - delta);
-			glNormal3f(0, 1, 0); glTexCoord2f(ff - texture_delta, f); glVertex3f(i - delta, 0, j);
-			glNormal3f(0, 1, 0); glTexCoord2f(ff, f); glVertex3f(i, 0.0, j);
-			glNormal3f(0, 1, 0); glTexCoord2f(ff, f - texture_delta); glVertex3f(i, 0.0, j - delta);
-			++k;
-			f = k % 8 == 0 ? texture_delta : f + texture_delta;
-		}
-		++kk;
-		ff = kk % 8 == 0 ? texture_delta : ff + texture_delta;
-	}
-	glEnd();
-	glDisable(GL_TEXTURE_2D);
-}
 
 void drawLamps()
 {
@@ -227,18 +268,182 @@ void drawLamps()
 	glPopMatrix();
 }
 
+void drawRoad()
+{
+	glColor3f(1, 1, 1);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0); glTexCoord2f(0.0, 0.0); glVertex3f(-40.0, -0, -40.0);
+	glNormal3f(0, 1, 0); glTexCoord2f(0.0, 10.0); glVertex3f(-40.0, 0, 40.0);
+	glNormal3f(0, 1, 0); glTexCoord2f(10.0, 10.0); glVertex3f(40.0, 0.0, 40);
+	glNormal3f(0, 1, 0); glTexCoord2f(10.0, 0.0); glVertex3f(40.0, 0.0, -40.0);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
+
+void _drawRoad()
+{
+	glColor3f(1, 1, 1);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);
+	const float delta = 0.25;
+	const float texture_delta = 0.125;
+	int kk = 0;
+	float ff = texture_delta;
+	for (float i = -40; i < 40; i += delta)
+	{
+		int k = 0;
+		float f = texture_delta;
+		for (float j = -40; j < 40; j += delta)
+		{
+			glNormal3f(0, 1, 0); glTexCoord2f(ff - texture_delta, f - texture_delta); glVertex3f(i - delta, 0, j - delta);
+			glNormal3f(0, 1, 0); glTexCoord2f(ff - texture_delta, f); glVertex3f(i - delta, 0, j);
+			glNormal3f(0, 1, 0); glTexCoord2f(ff, f); glVertex3f(i, 0.0, j);
+			glNormal3f(0, 1, 0); glTexCoord2f(ff, f - texture_delta); glVertex3f(i, 0.0, j - delta);
+			++k;
+			f = k % 8 == 0 ? texture_delta : f + texture_delta;
+		}
+		++kk;
+		ff = kk % 8 == 0 ? texture_delta : ff + texture_delta;
+	}
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
+
+
+void drawWheel()
+{
+	glRotatef(90, 0, 1, 0);
+	glRotatef(wheel_angle, 0, 0, 1);
+	glutSolidCube(0.1);
+	glutSolidTorus(0.15, 0.25, 10, 10);
+}
+
+void tryingTexturedCube(GLfloat size)
+{
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	glEnable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);
+	// Front Face
+	glNormal3f(0, 0, 1); glTexCoord2f(0.0f, 0.0f); glVertex3f(-size, -size, size);  // Bottom Left Of The Texture and Quad
+	glNormal3f(0, 0, 1); glTexCoord2f(1.0f, 0.0f); glVertex3f(size, -size, size);  // Bottom Right Of The Texture and Quad
+	glNormal3f(0, 0, 1); glTexCoord2f(1.0f, 1.0f); glVertex3f(size, size, size);  // Top Right Of The Texture and Quad
+	glNormal3f(0, 0, 1); glTexCoord2f(0.0f, 1.0f); glVertex3f(-size, size, size);  // Top Left Of The Texture and Quad
+
+	// Back Face
+	glNormal3f(0, 0, -1); glTexCoord2f(1.0f, 0.0f); glVertex3f(-size, -size, -size);  // Bottom Right Of The Texture and Quad
+	glNormal3f(0, 0, -1); glTexCoord2f(1.0f, 1.0f); glVertex3f(-size, size, -size);  // Top Right Of The Texture and Quad
+	glNormal3f(0, 0, -1); glTexCoord2f(0.0f, 1.0f); glVertex3f(size, size, -size);  // Top Left Of The Texture and Quad
+	glNormal3f(0, 0, -1); glTexCoord2f(0.0f, 0.0f); glVertex3f(size, -size, -size);  // Bottom Left Of The Texture and Quad
+
+
+	// Bottom Face 
+	glNormal3f(0, -1, 0); glTexCoord2f(1.0f, 1.0f); glVertex3f(-size, -size, -size);  // Top Right Of The Texture and Quad
+	glNormal3f(0, -1, 0); glTexCoord2f(0.0f, 1.0f); glVertex3f(size, -size, -size);  // Top Left Of The Texture and Quad
+	glNormal3f(0, -1, 0); glTexCoord2f(0.0f, 0.0f); glVertex3f(size, -size, size);  // Bottom Left Of The Texture and Quad
+	glNormal3f(0, -1, 0); glTexCoord2f(1.0f, 0.0f); glVertex3f(-size, -size, size);  // Bottom Right Of The Texture and Quad
+
+	// Top Face
+	glNormal3f(0, 1, 0); glTexCoord2f(0.0f, 1.0f); glVertex3f(-size, size, -size);  // Top Left Of The Texture and Quad
+	glNormal3f(0, 1, 0); glTexCoord2f(0.0f, 0.0f); glVertex3f(-size, size, size);  // Bottom Left Of The Texture and Quad
+	glNormal3f(0, 1, 0); glTexCoord2f(1.0f, 0.0f); glVertex3f(size, size, size);  // Bottom Right Of The Texture and Quad
+	glNormal3f(0, 1, 0); glTexCoord2f(1.0f, 1.0f); glVertex3f(size, size, -size);  // Top Right Of The Texture and Quad
+
+		// Left Face
+	glNormal3f(-1, 0, 0); glTexCoord2f(0.0f, 0.0f); glVertex3f(-size, -size, -size);  // Bottom Left Of The Texture and Quad
+	glNormal3f(-1, 0, 0); glTexCoord2f(1.0f, 0.0f); glVertex3f(-size, -size, size);  // Bottom Right Of The Texture and Quad
+	glNormal3f(-1, 0, 0); glTexCoord2f(1.0f, 1.0f); glVertex3f(-size, size, size);  // Top Right Of The Texture and Quad
+	glNormal3f(-1, 0, 0); glTexCoord2f(0.0f, 1.0f); glVertex3f(-size, size, -size);  // Top Left Of The Texture and Quad
+
+	// Right face
+	glNormal3f(1, 0, 0); glTexCoord2f(1.0f, 0.0f); glVertex3f(size, -size, -size);  // Bottom Right Of The Texture and Quad
+	glNormal3f(1, 0, 0); glTexCoord2f(1.0f, 1.0f); glVertex3f(size, size, -size);  // Top Right Of The Texture and Quad
+	glNormal3f(1, 0, 0); glTexCoord2f(0.0f, 1.0f); glVertex3f(size, size, size);  // Top Left Of The Texture and Quad
+	glNormal3f(1, 0, 0); glTexCoord2f(0.0f, 0.0f); glVertex3f(size, -size, size);  // Bottom Left Of The Texture and Quad
+
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
+
+void drawCar()
+{
+	glPushMatrix();
+	glTranslatef(x, 0.9, z);
+	glRotatef(car_angle, 0, 1, 0);
+
+	// корпус
+
+	for (float y = -0.5; y < 0.5; y += 0.1)
+	for (float x = -0.5; x < 0.5; x += 0.1)
+			for (float z = -1; z < 1.5; z+= 0.1) {
+				if (z > 1 && y > 0) break;
+				if (y < 0 && x * x - (y + 0.5) * (y + 0.5) > (z + 0.5)*(z + 0.5) )continue;
+				if (y < 0 && x * x - (y + 0.5) * (y + 0.5) > (z - 0.5) * (z - 0.5))continue;
+				if (y > 0 && x * x + y * y  + (z * z)/(2) > 0.49 )continue;
+				glPushMatrix();
+				glTranslatef(x, y, z);
+				glScalef(0.1, 0.1, 0.1);
+				tryingTexturedCube(0.5);
+				glTranslatef(-x, -y, -z);
+				glPopMatrix();
+			}
+
+	glTranslatef(0, -0.6, 0);
+	glColor3f(0.2, 0.2, 0.2);
+
+	// колеса
+	glPushMatrix();
+	glTranslatef(0.4, 0, 0.5);
+	drawWheel();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0.4, 0, -0.5);
+	drawWheel();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-0.4, 0, -0.5);
+	drawWheel();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-0.4, 0, 0.5);
+	drawWheel();
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
 // Отображение
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	
+	if (is_ahead)
+	{
+		x += SPEED * gr_sin(car_angle);
+		z += SPEED * gr_cos(car_angle);
+		is_ahead = 0;
+		wheel_angle += 5;
+	}
+	if (is_back)
+	{
+		x -= SPEED * gr_sin(car_angle);
+		z -= SPEED * gr_cos(car_angle);
+		is_back = 0;
+		wheel_angle -= 5;
+	}
+
 	drawLights();
-
-	drawRoad();
-
+	_drawRoad();
+	drawCar();
 	drawLamps();
-	
 	glutSwapBuffers();
 }
 
@@ -268,10 +473,61 @@ void specialKeys(int key, int x, int y)
 			glDisable(GL_LIGHT3);
 		else glEnable(GL_LIGHT3);
 		break;
+	case GLUT_KEY_F4:
+		if (glIsEnabled(GL_LIGHT4))
+		{
+			glDisable(GL_LIGHT4);
+			glDisable(GL_LIGHT5);
+		}
+		else
+		{
+			glEnable(GL_LIGHT4);
+			glEnable(GL_LIGHT5);
+		}
+		break;
 	case GLUT_KEY_F10:
 		if (glIsEnabled(GL_LIGHT0))
 			glDisable(GL_LIGHT0);
 		else glEnable(GL_LIGHT0);
+		break;
+	}
+	setCamera();
+	glutPostRedisplay();
+}
+
+void keyboard(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 'l':
+	case 'L':
+		camera_angle += 0.5;
+		break;
+	case 'r':
+	case 'R':
+		camera_angle -= 0.5;
+		break;
+	case 'a':
+	case 'A':
+		car_angle += 5;
+		break;
+	case 'd':
+	case 'D':
+		car_angle -= 5;
+		break;
+	case 'w':
+	case 'W':
+		is_ahead = 1;
+		break;
+	case 's':
+	case 'S':
+		is_back = 1;
+		break;
+	case'f':
+	case 'F':
+		if (glIsEnabled(GL_FOG))
+			glDisable(GL_FOG);
+		else glEnable(GL_FOG);
 		break;
 	}
 	setCamera();
@@ -289,7 +545,7 @@ int main(int argc, char * argv[])
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutSpecialFunc(specialKeys);
-
+	glutKeyboardFunc(keyboard);
 	glutMainLoop();
 	return 0;
 }
